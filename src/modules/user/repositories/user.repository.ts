@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
+import { Role } from 'src/entities/enums/role.enum';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { Role } from 'src/entities/enums/role.enum';
 
 @Injectable()
 export class UserRepository {
@@ -30,7 +30,6 @@ export class UserRepository {
       }
     });
   }
-
   async findUserById(id: UUID) {
     return await this.userRepository.findOne({
       where: {

@@ -1,23 +1,31 @@
 import {
   Body,
+  Body,
   Controller,
   Delete,
+  Delete,
   Get,
+  Param,
+  ParseUUIDPipe,
   Param,
   ParseUUIDPipe,
   Patch,
   Post,
   UseInterceptors
+  Post,
+  UseInterceptors
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { UUID } from 'crypto';
 import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
-import { CreateStudentDto } from './dto/create-student.dto';
-import { CreateTeacherDto } from './dto/create-teacher.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
+import { ApiTags } from '@nestjs/swagger';
+import { CreateTeacherDto } from './dto/create-teacher.dto';
+import { CreateStudentDto } from './dto/create-student.dto';
 
 @Controller('users')
+@ApiTags('User')
 @ApiTags('User')
 @UseInterceptors(LoggingInterceptor)
 export class UserController {
@@ -40,13 +48,15 @@ export class UserController {
     }
   }
 
-  @Post('teacher')
+  @Post('student')
   async createTeacher(@Body() createTeacherDto: CreateTeacherDto) {
     try {
+      await this.userService.createTeacher(createTeacherDto, createTeacherDto.subject);
       await this.userService.createTeacher(createTeacherDto, createTeacherDto.subject);
 
       return {
         success: true,
+        message: 'Teacher Created Successfully'
         message: 'Teacher Created Successfully'
       };
     } catch (error) {

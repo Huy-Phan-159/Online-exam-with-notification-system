@@ -8,7 +8,8 @@ import { Exam } from './exam.entity';
 export class Teacher extends BaseEntity {
   @Column({
     type: 'varchar',
-    length: 255
+    length: 255,
+    nullable: true
   })
   subject: string;
 

@@ -13,7 +13,6 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto) {
-    console.log('111111');
 
     const response = await this.authService.login(loginDto);
 

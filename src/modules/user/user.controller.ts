@@ -95,7 +95,7 @@ export class UserController {
   @Patch(':id')
   async update(@Param('id', new ParseUUIDPipe()) id: UUID, @Body() updateUserDto: UpdateUserDto) {
     try {
-      await this.userService.update(id, updateUserDto);
+      await this.userService.updateUser(id, updateUserDto);
       return {
         success: true,
         message: 'User Updated Successfully'
@@ -111,7 +111,7 @@ export class UserController {
   @Delete(':id')
   async remove(@Param('id', new ParseUUIDPipe()) id: UUID) {
     try {
-      await this.userService.remove(id);
+      await this.userService.removeUser(id);
       return {
         success: true,
         message: 'User Deleted Successfully'

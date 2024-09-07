@@ -12,8 +12,8 @@ import { join } from 'path';
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule);
-
   const configService = app.select(SharedModule).get(ApiConfigService);
+
   const port = configService.serverConfig.port;
 
   if (configService.documentationEnabled) {

@@ -50,7 +50,7 @@ export class UserRepository {
     return userUpdated;
   }
 
-  async removeUser(user): Promise<User[]> {
-    return await this.userRepository.remove(user);
+  async delete(userId) {
+    return await this.userRepository.softDelete(userId);
   }
 }

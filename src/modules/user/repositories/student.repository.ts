@@ -18,4 +18,8 @@ export class StudentRepository {
 
     return studentCreated;
   }
+
+  async delete(userId: UUID) {
+    return this.studentRepository.softDelete({user: {id: userId}});
+  }
 }

@@ -1,14 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsPhoneNumber, IsString, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsPhoneNumber, IsString, MaxLength } from 'class-validator';
 import { CreateUserDto } from './create-user.dto';
 
 export class CreateStudentDto extends CreateUserDto {
   @IsString()
+  @IsNotEmpty()
   @IsPhoneNumber()
   @MaxLength(15)
   @ApiProperty({
     description: 'phone number of parent',
-    example: '+8494865913'
+    example: '+442071234567'
   })
   parentNumber: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({
+    description: 'role of student',
+    example: 'student'
+  })
+  role: string;
 }

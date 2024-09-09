@@ -9,6 +9,7 @@ import { UserModule } from './modules/user/user.module';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { GlobalException } from './exceptions/global.exception';
+import { ExamModule } from './modules/exam/exam.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,7 +23,8 @@ import { GlobalException } from './exceptions/global.exception';
       useFactory: (configService: ApiConfigService) => configService.postgresConfig,
       inject: [ApiConfigService]
     }),
-    UserModule
+    UserModule,
+    ExamModule
   ],
   controllers: [AppController],
   providers: [

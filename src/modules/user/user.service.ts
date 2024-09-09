@@ -33,7 +33,6 @@ export class UserService {
         parentNumber
       );
 
-
       return userData;
     } catch (error) {
       throw error;
@@ -61,34 +60,47 @@ export class UserService {
   }
 
   async findOneTeacher(id: UUID) {
-    return await this.teacherRepository.findOne(id);
+    const teacherData = await this.teacherRepository.findOne(id);
+
+    if (!teacherData) {
+      throw new BadRequestException({
+        message: ERRORS_DICTIONARY.USER_NOT_FOUND
+      });
+    }
+
+    return teacherData;
   }
 
   async findAll(): Promise<User[]> {
-    return await this.userRepository.findAllUser();
+    const user = await this.userRepository.findAllUser();
+
+    if (!user) {
+      throw new BadRequestException({
+        message: ERRORS_DICTIONARY.USER_NOT_FOUND
+      });
+    }
+
+    return user;
   }
 
   async findAllTeacher(){
     return await this.teacherRepository.findAll()
   }
 
-  async findOne(id: UUID): Promise<User> {
-    const userData = await this.userRepository.findUserById(id);
-
-    if (!userData) {
+    if (!teacher) {
       throw new BadRequestException({
-        message: ERRORS_DICTIONARY.EMAIL_EXISTED
+        message: ERRORS_DICTIONARY.USER_NOT_FOUND
       });
     }
 
-    return userData;
+    return teacher;
   }
 
-  async findUserById(id: UUID) {
+  async findOne(id: UUID): Promise<User> {
     const existingUser = await this.userRepository.findUserById(id);
 
     if (!existingUser) {
-      throw new NotFoundException({
+      throw new BadRequestException({
         message: ERRORS_DICTIONARY.USER_NOT_FOUND
       });
     }

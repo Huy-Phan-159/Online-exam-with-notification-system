@@ -14,5 +14,7 @@ export enum ERRORS_DICTIONARY {
   QUESTION_NOT_FOUND = 'Question not found',
 
   //author
-  NOT_RIGHTS = 'Not rights'
+  NOT_RIGHTS = 'Not rights',
+  EXAM_NOT_FOUND = 'Exam not found',
+  EXAM_NAME_EXIST = 'Exam name already exists'
 }

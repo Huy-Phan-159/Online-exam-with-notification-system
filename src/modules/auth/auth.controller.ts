@@ -12,20 +12,19 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto) {
-
     const response = await this.authService.login(loginDto);
 
     if (response.status !== 200) {
       return {
         statusCode: response.status,
-        message: response.message,
+        message: response.message
       };
     }
 
     return {
       statusCode: 200,
       data: response.data,
-      message: response.message,
+      message: response.message
     };
   }
 }

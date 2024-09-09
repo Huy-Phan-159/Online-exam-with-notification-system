@@ -7,6 +7,8 @@ export enum ERRORS_DICTIONARY {
   VALIDATION_ERROR = 'ValidationError',
   //
   AUTHORIZE_ERROR = "You're not authorize",
-  TOKEN_ERROR = "Token invalid",
+  TOKEN_ERROR = 'Token invalid',
 
+  EXAM_NOT_FOUND = 'Exam not found',
+  EXAM_NAME_EXIST = 'Exam name already exists'
 }

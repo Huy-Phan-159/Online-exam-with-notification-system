@@ -1,9 +1,8 @@
-import { Entity, Column, ManyToOne, JoinColumn, ManyToMany, OneToMany, JoinTable, OneToOne } from 'typeorm';
-import { User } from './user.entity';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import { BaseEntity } from './base/base.entity';
-import { Class } from './class.entity';
 import { Result } from './result.entity';
 import { StudentClass } from './student-class.entity';
+import { User } from './user.entity';
 
 @Entity('students')
 export class Student extends BaseEntity {
@@ -14,9 +13,9 @@ export class Student extends BaseEntity {
   })
   public parentNumber: string;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({
-    name: 'userId'
+    name: 'userId', referencedColumnName: 'id'
   })
   public user: User;
 

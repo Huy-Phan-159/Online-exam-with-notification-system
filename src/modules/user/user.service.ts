@@ -1,13 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
-import { Student } from 'src/entities/student.entity';
-import { Repository } from 'typeorm';
 import { User } from '../../entities/user.entity';
-import { Teacher } from './../../entities/teacher.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { StudentRepository } from './repositories/student.repository';
 import { TeacherRepository } from './repositories/teacher.repository';
 import { UserRepository } from './repositories/user.repository';
 
@@ -15,9 +12,7 @@ import { UserRepository } from './repositories/user.repository';
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
-    @InjectRepository(Student)
-    private readonly studentRepository: Repository<Student>,
-    @InjectRepository(Teacher)
+    private readonly studentRepository: StudentRepository,
     private readonly teacherRepository: TeacherRepository
   ) {}
 
@@ -33,10 +28,11 @@ export class UserService {
 
       const userData = await this.userRepository.createUser(createUserDto);
 
-      await this.studentRepository.create({
-        user: userData,
+      await this.studentRepository.create(
+        userData.id,
         parentNumber
-      });
+      );
+
 
       return userData;
     } catch (error) {
@@ -56,7 +52,7 @@ export class UserService {
 
       const userData = await this.userRepository.createUser(createUserDto);
 
-      await this.teacherRepository.createTeacher(userData, teacherSubject);
+      await this.teacherRepository.create(userData.id, teacherSubject);
 
       return userData;
     } catch (error) {
@@ -64,8 +60,16 @@ export class UserService {
     }
   }
 
+  async findOneTeacher(id: UUID) {
+    return await this.teacherRepository.findOne(id);
+  }
+
   async findAll(): Promise<User[]> {
     return await this.userRepository.findAllUser();
+  }
+
+  async findAllTeacher(){
+    return await this.teacherRepository.findAll()
   }
 
   async findOne(id: UUID): Promise<User> {
@@ -106,7 +110,7 @@ export class UserService {
     return userData;
   }
 
-  async removeUser(id: UUID): Promise<User> {
+  async removeUser(id: UUID): Promise<User[]> {
     const existingUser = await this.userRepository.findUserById(id);
 
     if (!existingUser) {
@@ -117,6 +121,8 @@ export class UserService {
 
     let userRemoved = await this.userRepository.removeUser(existingUser);
 
-    return existingUser;
+    return userRemoved;
   }
+
+  async;
 }

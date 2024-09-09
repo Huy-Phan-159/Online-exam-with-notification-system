@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsEmail, IsNotEmpty, IsPhoneNumber, IsString, MaxLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString, MaxLength } from 'class-validator';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -11,12 +11,6 @@ export class CreateUserDto {
     example: 'abc@gmail.com'
   })
   email: string;
-
-  @ApiProperty({
-    example: 'student'
-  })
-  @IsString()
-  role?: string;
 
   @IsNotEmpty()
   @MaxLength(255)
@@ -36,12 +30,16 @@ export class CreateUserDto {
   @MaxLength(15)
   @ApiProperty({
     description: 'phone number of user',
-    example: '+8494865913'
+    example: '+442071234567'
   })
   phoneNumber: string;
 
-  @IsBoolean()
-  isActive: boolean;
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'birthDate time using ISO8601',
+    example: '2023-04-15'
+  })
+  birthDate: Date;
 
   @IsNotEmpty()
   @IsString()

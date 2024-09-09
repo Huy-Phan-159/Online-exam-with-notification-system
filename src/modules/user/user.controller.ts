@@ -9,14 +9,13 @@ import {
   Post,
   UseInterceptors
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { UUID } from 'crypto';
 import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateStudentDto } from './dto/create-student.dto';
+import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
-import { ApiTags } from '@nestjs/swagger';
-import { CreateTeacherDto } from './dto/create-teacher.dto';
-import { CreateStudentDto } from './dto/create-student.dto';
 
 @Controller('users')
 @ApiTags('User')
@@ -41,7 +40,7 @@ export class UserController {
     }
   }
 
-  @Post('student')
+  @Post('teacher')
   async createTeacher(@Body() createTeacherDto: CreateTeacherDto) {
     try {
       await this.userService.createTeacher(createTeacherDto, createTeacherDto.subject);
@@ -75,10 +74,44 @@ export class UserController {
     }
   }
 
+  @Get('a')
+  async findAllTeacher() {
+    try {
+      const data = await this.userService.findAllTeacher();
+      return {
+        success: true,
+        data,
+        message: 'User Fetched Successfully'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message
+      };
+    }
+  }
+
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: UUID) {
     try {
       const data = await this.userService.findOne(id);
+      return {
+        success: true,
+        data,
+        message: 'User Fetched Successfully'
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message
+      };
+    }
+  }
+
+  @Get('teacher/:id')
+  async findTeacher(@Param('id', new ParseUUIDPipe()) id: UUID) {
+    try {
+      const data = await this.userService.findOneTeacher(id);
       return {
         success: true,
         data,

@@ -7,10 +7,11 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { UserRepository } from './repositories/user.repository';
 import { TeacherRepository } from './repositories/teacher.repository';
+import { StudentRepository } from './repositories/student.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Teacher, Student])],
   controllers: [UserController],
-  providers: [UserService, UserRepository, TeacherRepository]
+  providers: [UserService, UserRepository, TeacherRepository, StudentRepository]
 })
 export class UserModule {}

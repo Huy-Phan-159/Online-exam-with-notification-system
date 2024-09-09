@@ -18,5 +18,9 @@ export enum ERRORS_DICTIONARY {
   // CLASS ENTITY
   NOT_FOUND_ANY_CLASS = 'Not found any class',
   UNIQUE_CONSTRAINT = 'Unique constraint',
-  NOT_RECORD_WAS_DELETED = 'NOT record was deleted'
+  NOT_RECORD_WAS_DELETED = 'NOT record was deleted',
+
+  // EXAM
+  EXAM_NOT_FOUND = 'Exam not found',
+  EXAM_NAME_EXIST = 'Exam name already exists'
 }

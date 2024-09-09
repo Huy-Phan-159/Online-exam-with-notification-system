@@ -1,13 +1,11 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { SharedModule } from './shared/shared.module';
-import { ApiConfigService } from './shared/services/api-config.service';
-import { configSwagger } from './configs/setup-swagger';
 import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
-import { ERRORS_DICTIONARY } from './constraints/error-dictionary.constraint';
+import { NestFactory } from '@nestjs/core';
 import { ValidationError } from 'class-validator';
-import { LoggingMiddleware } from './middlewares/logging.middleware';
-import { join } from 'path';
+import { AppModule } from './app.module';
+import { configSwagger } from './configs/setup-swagger';
+import { ERRORS_DICTIONARY } from './constraints/error-dictionary.constraint';
+import { ApiConfigService } from './shared/services/api-config.service';
+import { SharedModule } from './shared/shared.module';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -30,6 +28,7 @@ async function bootstrap() {
         })
     })
   );
+
   await app.listen(port);
 
   logger.log(`🚀 Server running on: http://localhost:${port}/api-docs`);

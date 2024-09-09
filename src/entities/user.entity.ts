@@ -1,7 +1,9 @@
 import { Column, Entity, Index, OneToOne } from 'typeorm';
 import { BaseEntity } from './base/base.entity';
-import { Role } from './enums/role.enum';
 import { Gender } from './enums/gender.enum';
+import { Role } from './enums/role.enum';
+import { Student } from './student.entity';
+import { Teacher } from './teacher.entity';
 
 @Entity('users')
 @Index(['firstName', 'lastName'])
@@ -64,4 +66,10 @@ export class User extends BaseEntity {
     nullable: false
   })
   lastName: string;
+
+  @OneToOne(() => Teacher)
+  teacher: Teacher
+
+  @OneToOne(() => Student)
+  student: Student
 }

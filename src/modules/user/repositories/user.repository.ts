@@ -5,6 +5,7 @@ import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { Role } from 'src/entities/enums/role.enum';
 
 @Injectable()
 export class UserRepository {
@@ -14,8 +15,8 @@ export class UserRepository {
   ) {}
 
   async createUser(createUserDto: CreateUserDto) {
-    const userCreated = this.userRepository.create(createUserDto);
-    this.userRepository.save(userCreated);
+    const user = this.userRepository.create(createUserDto);
+    const userCreated = await this.userRepository.save(user);
     return userCreated;
   }
 
@@ -29,6 +30,7 @@ export class UserRepository {
       }
     });
   }
+
   async findUserById(id: UUID) {
     return await this.userRepository.findOne({
       where: {
@@ -36,13 +38,20 @@ export class UserRepository {
       }
     });
   }
+
+  async findAllTeacher() {
+    return await this.userRepository.findBy({
+      role: Role.TEACHER
+    });
+  }
+
   async updateUser(id: UUID, updateUserDto: UpdateUserDto) {
     const userUpdated = await this.userRepository.update({ id }, { ...updateUserDto });
 
     return userUpdated;
-    }
-    
-    async removeUser(user) {
-        return await this.userRepository.remove(user);
-    }
+  }
+
+  async removeUser(user): Promise<User[]> {
+    return await this.userRepository.remove(user);
+  }
 }

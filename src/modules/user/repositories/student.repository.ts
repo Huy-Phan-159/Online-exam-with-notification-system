@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { UUID } from "crypto";
 import { Student } from "src/entities/student.entity";
 import { Repository } from "typeorm";
 
@@ -7,13 +8,13 @@ import { Repository } from "typeorm";
 export class StudentRepository {
   constructor(@InjectRepository(Student) private readonly studentRepository: Repository<Student>) {}
 
-  async createTeacher(userData, parentNumber) {
-    const studentCreated = await this.studentRepository.create({
+  async create(userData, parentNumber: string) {
+    const studentData = await this.studentRepository.create({
       user: userData,
       parentNumber
     });
 
-    await this.studentRepository.save(studentCreated);
+    const studentCreated = await this.studentRepository.save(studentData);
 
     return studentCreated;
   }

@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { UUID } from 'crypto';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
 import { User } from '../../entities/user.entity';
@@ -26,12 +27,11 @@ export class UserService {
         });
       }
 
-      const userData = await this.userRepository.createUser(createUserDto);
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-      await this.studentRepository.create(
-        userData.id,
-        parentNumber
-      );
+      const userData = await this.userRepository.createUser({ ...createUserDto, password: hashedPassword });
+
+      await this.studentRepository.create(userData.id, parentNumber);
 
       return userData;
     } catch (error) {
@@ -49,9 +49,11 @@ export class UserService {
         });
       }
 
-      const userData = await this.userRepository.createUser(createUserDto);
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-      await this.teacherRepository.create(userData.id, teacherSubject);
+      const userData = await this.userRepository.createUser({ ...createUserDto, password: hashedPassword });
+
+      await this.teacherRepository.create(userData, teacherSubject);
 
       return userData;
     } catch (error) {
@@ -122,7 +124,7 @@ export class UserService {
     return userData;
   }
 
-  async removeUser(id: UUID): Promise<User[]> {
+  async removeUser(id: UUID) {
     const existingUser = await this.userRepository.findUserById(id);
 
     if (!existingUser) {
@@ -131,7 +133,7 @@ export class UserService {
       });
     }
 
-    let userRemoved = await this.userRepository.removeUser(existingUser);
+    const userRemoved = await this.userRepository.delete(id);
 
     return userRemoved;
   }

@@ -3,10 +3,9 @@ import {
   BeforeInsert,
   CreateDateColumn,
   DeleteDateColumn,
-  Column,
-  UpdateDateColumn,
   Index,
-  PrimaryColumn
+  PrimaryColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import { v4 as uuidV4 } from 'uuid';
 

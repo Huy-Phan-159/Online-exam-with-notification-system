@@ -14,21 +14,20 @@ export class TeacherRepository {
       subject
     });
 
-      const teacherCreated = await this.teacherRepository.save(teacherData);
+    const teacherCreated = await this.teacherRepository.save(teacherData);
 
     return teacherCreated;
   }
 
-  async findOne(id: UUID) {
+  async findOne(userId: UUID) {
     return await this.teacherRepository.findOne({
       where: {
-      id
+        user: { id: userId }
       },
       relations: {
         user: true
       }
-    },
-    )
+    });
   }
 
   async findAll() {
@@ -36,7 +35,19 @@ export class TeacherRepository {
       relations: {
         user: true
       }
-    })
+    });
   }
 
+  async findAny(userId) {
+    return await this.teacherRepository.find({
+      where: {
+        user: { id: userId },
+        deletedAt: null
+      }
+    });
+  }
+
+  async delete(userId) {
+    return await this.teacherRepository.softDelete({ user: { id: userId } });
+  }
 }

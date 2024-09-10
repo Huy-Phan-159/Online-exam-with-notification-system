@@ -42,7 +42,7 @@ export class StudentsService {
     const students = await this.usersRepository.findAllStudent();
 
     if (!students) {
-      throw new BadRequestException({
+      throw new NotFoundException({
         message: ERRORS_DICTIONARY.USER_NOT_FOUND
       });
     }
@@ -54,7 +54,7 @@ export class StudentsService {
     const student = await this.usersRepository.findOneStudent(userId);
 
     if (!student) {
-      throw new BadRequestException({
+      throw new NotFoundException({
         message: ERRORS_DICTIONARY.USER_NOT_FOUND
       });
     }

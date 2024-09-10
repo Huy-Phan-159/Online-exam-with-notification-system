@@ -13,7 +13,7 @@ export class UsersService {
     const users = await this.usersRepository.findAllUser();
 
     if (!users) {
-      throw new BadRequestException({
+      throw new NotFoundException({
         message: ERRORS_DICTIONARY.USER_NOT_FOUND
       });
     }
@@ -25,7 +25,7 @@ export class UsersService {
     const existingUser = await this.usersRepository.findUserById(id);
 
     if (!existingUser) {
-      throw new BadRequestException({
+      throw new NotFoundException({
         message: ERRORS_DICTIONARY.USER_NOT_FOUND
       });
     }

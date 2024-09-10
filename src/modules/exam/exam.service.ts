@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { UUID } from 'crypto';
@@ -14,20 +14,18 @@ export class ExamService {
   ) {}
 
   async create(createExamDto: CreateExamDto): Promise<Exam> {
-    try {
-      const existingExam = await this.examRepository.findOne({ where: { name: createExamDto.name } });
-      if (existingExam) {
-        throw new ConflictException('An exam with this name already exists.');
-      }
-      const newExam = this.examRepository.create({
-        ...createExamDto,
-        teacher: { id: createExamDto.teacherId },
-        category: { id: createExamDto.categoryId }
+    const existingExam = await this.examRepository.findOne({ where: { name: createExamDto.name } });
+    if (existingExam) {
+      throw new BadRequestException({
+        message: 'An exam with this name already exists.'
       });
-      return await this.examRepository.save(newExam);
-    } catch (error) {
-      throw error;
     }
+    const newExam = this.examRepository.create({
+      ...createExamDto,
+      teacher: { id: createExamDto.teacherId },
+      category: { id: createExamDto.categoryId }
+    });
+    return await this.examRepository.save(newExam);
   }
   async findAll(): Promise<Exam[]> {
     return await this.examRepository.find();
@@ -36,7 +34,7 @@ export class ExamService {
   async findOne(id: UUID): Promise<Exam> {
     const examData = await this.examRepository.findOneBy({ id });
     if (!examData) {
-      throw new BadRequestException({
+      throw new NotFoundException({
         message: 'Exam not found'
       });
     }
@@ -46,7 +44,7 @@ export class ExamService {
   async update(id: UUID, updateExamDto: UpdateExamDto): Promise<Exam> {
     const existingExam = await this.findOne(id);
     if (!existingExam) {
-      throw new BadRequestException({
+      throw new NotFoundException({
         message: 'Exam not found'
       });
     }
@@ -57,7 +55,7 @@ export class ExamService {
   async remove(id: UUID): Promise<DeleteResult> {
     const exam = await this.examRepository.findOneBy({ id });
     if (!exam) {
-      throw new BadRequestException({
+      throw new NotFoundException({
         message: 'Exam not found'
       });
     }

@@ -15,6 +15,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ExamService } from './exam.service';
 import { CreateExamDto } from './dto/create-exam.dto';
 import { UpdateExamDto } from './dto/update-exam.dto';
+import { MessageResponse } from 'src/decorators/message-response.decorator';
 
 @ApiTags('Exams')
 @Controller('exams')
@@ -23,93 +24,37 @@ export class ExamController {
   constructor(private readonly examService: ExamService) {}
 
   @Post()
+  @MessageResponse('Create Exam Successfully')
   async create(@Body() createExamDto: CreateExamDto) {
-    try {
-      const data = await this.examService.create(createExamDto);
-
-      return {
-        success: true,
-        data,
-        message: 'Exam Created Successfully'
-      };
-    } catch (error) {
-      return {
-        success: false,
-        data: null,
-        message: error.message
-      };
-    }
+    const data = await this.examService.create(createExamDto);
+    return data;
   }
 
   @Get()
+  @MessageResponse('Get Exams Successfully')
   async findAll() {
-    try {
-      const data = await this.examService.findAll();
-      return {
-        success: true,
-        data,
-        message: 'Exam Fetched Successfully'
-      };
-    } catch (error) {
-      return {
-        success: false,
-        data: null,
-        message: error.message
-      };
-    }
+    const data = await this.examService.findAll();
+    return data;
   }
 
   @Get(':id')
+  @MessageResponse('Get Exam Successfully')
   async findOne(@Param('id', new ParseUUIDPipe()) id: UUID) {
-    try {
-      const data = await this.examService.findOne(id);
-      return {
-        success: true,
-        data,
-        message: 'Exam Fetched Successfully'
-      };
-    } catch (error) {
-      return {
-        success: false,
-        data: null,
-        message: error.message
-      };
-    }
+    const data = await this.examService.findOne(id);
+    return data;
   }
 
   @Patch(':id')
+  @MessageResponse('Update Exam Successfully')
   async update(@Param('id', new ParseUUIDPipe()) id: UUID, @Body() updateExamDto: UpdateExamDto) {
-    try {
-      const data = await this.examService.update(id, updateExamDto);
-      return {
-        success: true,
-        data,
-        message: 'Exam Updated Successfully'
-      };
-    } catch (error) {
-      return {
-        success: false,
-        data: null,
-        message: error.message
-      };
-    }
+    const data = await this.examService.update(id, updateExamDto);
+    return data;
   }
 
   @Delete(':id')
+  @MessageResponse('Delete Exam Successfully')
   async remove(@Param('id', new ParseUUIDPipe()) id: UUID) {
-    try {
-      const data = await this.examService.remove(id);
-      return {
-        success: true,
-        data,
-        message: 'Exam Deleted Successfully'
-      };
-    } catch (error) {
-      return {
-        success: false,
-        data: null,
-        message: error.message
-      };
-    }
+    const data = await this.examService.remove(id);
+    return data;
   }
 }

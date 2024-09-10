@@ -14,7 +14,7 @@ import { UUID } from 'crypto';
 import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
-import { TeachersService } from './teacher.service';
+import { TeachersService } from './teachers.service';
 
 @Controller('teacher')
 @ApiTags('Teacher')

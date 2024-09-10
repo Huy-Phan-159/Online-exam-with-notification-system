@@ -10,7 +10,6 @@ import { UsersModule } from './modules/users/users.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
 import { ExamModule } from './modules/exam/exam.module';
-
 @Module({
   imports: [
     ConfigModule.forRoot({

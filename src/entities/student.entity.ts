@@ -13,9 +13,10 @@ export class Student extends BaseEntity {
   })
   public parentNumber: string;
 
-  @OneToOne(() => User, { onDelete: 'CASCADE' })
+  @OneToOne(() => User, (user) => user.student, { onDelete: 'CASCADE' })
   @JoinColumn({
-    name: 'userId', referencedColumnName: 'id'
+    name: 'userId',
+    referencedColumnName: 'id'
   })
   public user: User;
 

@@ -25,7 +25,7 @@ export class User extends BaseEntity {
 
   @Column({
     type: 'varchar',
-    nullable: false,
+    nullable: false
   })
   password: string;
 
@@ -67,9 +67,9 @@ export class User extends BaseEntity {
   })
   lastName: string;
 
-  @OneToOne(() => Teacher)
-  teacher: Teacher
+  @OneToOne(() => Teacher, (teacher) => teacher.user)
+  teacher: Teacher;
 
-  @OneToOne(() => Student)
-  student: Student
+  @OneToOne(() => Student, (student) => student.user)
+  student: Student;
 }

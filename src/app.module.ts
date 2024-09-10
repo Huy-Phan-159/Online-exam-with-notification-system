@@ -4,7 +4,9 @@ import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GlobalException } from './exceptions/global.exception';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
-import { UserModule } from './modules/user/user.module';
+import { StudentsModule } from './modules/students/students.module';
+import { TeachersModule } from './modules/teachers/teachers.module';
+import { UsersModule } from './modules/users/users.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
 @Module({
@@ -20,7 +22,9 @@ import { SharedModule } from './shared/shared.module';
       useFactory: (configService: ApiConfigService) => configService.postgresConfig,
       inject: [ApiConfigService]
     }),
-    UserModule
+    UsersModule,
+    StudentsModule,
+    TeachersModule
   ],
   providers: [
     {

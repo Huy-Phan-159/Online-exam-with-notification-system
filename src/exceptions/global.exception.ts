@@ -14,7 +14,8 @@ export class GlobalException implements ExceptionFilter {
     const message = exception instanceof HttpException ? exception.message : 'Internal server error';
 
     response.status(status).json({
-      statusCode: status,
+      success: false,
+      data: null,
       message,
     });
   }

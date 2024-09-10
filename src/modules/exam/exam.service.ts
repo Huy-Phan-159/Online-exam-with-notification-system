@@ -1,7 +1,6 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
+import { DeleteResult, Repository } from 'typeorm';
 import { UUID } from 'crypto';
 import { Exam } from 'src/entities/exam.entity';
 import { CreateExamDto } from './dto/create-exam.dto';
@@ -38,7 +37,7 @@ export class ExamService {
     const examData = await this.examRepository.findOneBy({ id });
     if (!examData) {
       throw new BadRequestException({
-        message: ERRORS_DICTIONARY.EMAIL_EXISTED
+        message: 'Exam not found'
       });
     }
     return examData;
@@ -46,12 +45,22 @@ export class ExamService {
 
   async update(id: UUID, updateExamDto: UpdateExamDto): Promise<Exam> {
     const existingExam = await this.findOne(id);
+    if (!existingExam) {
+      throw new BadRequestException({
+        message: 'Exam not found'
+      });
+    }
     const examData = this.examRepository.merge(existingExam, updateExamDto);
     return await this.examRepository.save(examData);
   }
 
-  async remove(id: UUID): Promise<Exam> {
-    const existingExam = await this.findOne(id);
-    return await this.examRepository.remove(existingExam);
+  async remove(id: UUID): Promise<DeleteResult> {
+    const exam = await this.examRepository.findOneBy({ id });
+    if (!exam) {
+      throw new BadRequestException({
+        message: 'Exam not found'
+      });
+    }
+    return await this.examRepository.softDelete({ id });
   }
 }

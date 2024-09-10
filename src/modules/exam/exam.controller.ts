@@ -25,15 +25,17 @@ export class ExamController {
   @Post()
   async create(@Body() createExamDto: CreateExamDto) {
     try {
-      await this.examService.create(createExamDto);
+      const data = await this.examService.create(createExamDto);
 
       return {
         success: true,
+        data,
         message: 'Exam Created Successfully'
       };
     } catch (error) {
       return {
         success: false,
+        data: null,
         message: error.message
       };
     }
@@ -51,6 +53,7 @@ export class ExamController {
     } catch (error) {
       return {
         success: false,
+        data: null,
         message: error.message
       };
     }
@@ -68,6 +71,7 @@ export class ExamController {
     } catch (error) {
       return {
         success: false,
+        data: null,
         message: error.message
       };
     }
@@ -76,14 +80,16 @@ export class ExamController {
   @Patch(':id')
   async update(@Param('id', new ParseUUIDPipe()) id: UUID, @Body() updateExamDto: UpdateExamDto) {
     try {
-      await this.examService.update(id, updateExamDto);
+      const data = await this.examService.update(id, updateExamDto);
       return {
         success: true,
+        data,
         message: 'Exam Updated Successfully'
       };
     } catch (error) {
       return {
         success: false,
+        data: null,
         message: error.message
       };
     }
@@ -92,14 +98,16 @@ export class ExamController {
   @Delete(':id')
   async remove(@Param('id', new ParseUUIDPipe()) id: UUID) {
     try {
-      await this.examService.remove(id);
+      const data = await this.examService.remove(id);
       return {
         success: true,
+        data,
         message: 'Exam Deleted Successfully'
       };
     } catch (error) {
       return {
         success: false,
+        data: null,
         message: error.message
       };
     }

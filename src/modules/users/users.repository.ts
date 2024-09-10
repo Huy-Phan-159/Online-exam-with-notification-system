@@ -42,6 +42,10 @@ export class UsersRepository {
       where: {
         id
       },
+      relations: {
+        teacher: true,
+        student: true
+      },
       select: userSelectFields
     });
   }

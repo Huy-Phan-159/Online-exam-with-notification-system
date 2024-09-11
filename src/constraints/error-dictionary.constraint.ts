@@ -16,5 +16,6 @@ export enum ERRORS_DICTIONARY {
   //author
   NOT_RIGHTS = 'Not rights',
   // CLASS ENTITY
-  NOT_FOUND_ANY_CLASS = 'Not found any class'
+  NOT_FOUND_ANY_CLASS = 'Not found any class',
+  UNIQUE_CONSTRAINT = 'Unique constraint'
 }

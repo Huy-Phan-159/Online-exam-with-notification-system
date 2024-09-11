@@ -24,6 +24,16 @@ export class UsersService {
     return existingUser;
   }
 
+  async findOneByEmail(email: string): Promise<User> {
+    const existingUser = await this.usersRepository.findUserByEmail(email);
+
+    if (!existingUser) {
+      throw new UserNotFoundException();
+    }
+
+    return existingUser;
+  }
+
   async updateUser(userId: UUID, updateUserDto: UpdateUserDto): Promise<UpdateResult> {
     const existingUser = await this.usersRepository.findUserById(userId);
 

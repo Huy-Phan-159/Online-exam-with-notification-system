@@ -1,9 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ClassesService } from './classes.service';
 import { CreateClassDto } from './dto/create-class.dto';
 import { UpdateClassDto } from './dto/update-class.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { QueryClassDto } from './dto/query-class.dto';
+import { UUID } from 'crypto';
 
 @Controller('classes')
+@ApiTags('classes')
 export class ClassesController {
   constructor(private readonly classesService: ClassesService) {}
 
@@ -13,22 +17,24 @@ export class ClassesController {
   }
 
   @Get()
-  findAll() {
-    return this.classesService.findAll();
+  async findAll(@Query() queryClassDto: QueryClassDto) {
+    const { page, limit, ...searchQueries } = queryClassDto;
+
+    return await this.classesService.findAll(page, limit, searchQueries);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.classesService.findOne(+id);
+  async findOne(@Param('id') id: UUID) {
+    return await this.classesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateClassDto: UpdateClassDto) {
-    return this.classesService.update(+id, updateClassDto);
+  update(@Param('id') id: UUID, @Body() updateClassDto: UpdateClassDto) {
+    return this.classesService.update(id, updateClassDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.classesService.remove(+id);
+  remove(@Param('id') id: UUID) {
+    return this.classesService.remove(id);
   }
 }

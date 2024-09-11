@@ -3,10 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
 import { Role } from 'src/entities/enums/role.enum';
 import { User } from 'src/entities/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { userSelectFields } from './user-select-fields';
 
 @Injectable()
 export class UsersRepository {
@@ -24,17 +23,14 @@ export class UsersRepository {
   }
 
   async findAllUser(): Promise<User[]> {
-    return await this.usersRepository.find({
-      select: userSelectFields
-    });
+    return await this.usersRepository.find();
   }
 
   async findUserByEmail(email: string): Promise<User> {
     return await this.usersRepository.findOne({
       where: {
         email
-      },
-      select: userSelectFields
+      }
     });
   }
   async findUserById(id: UUID): Promise<User> {
@@ -45,8 +41,7 @@ export class UsersRepository {
       relations: {
         teacher: true,
         student: true
-      },
-      select: userSelectFields
+      }
     });
   }
 
@@ -55,7 +50,6 @@ export class UsersRepository {
       where: {
         id: userId
       },
-      select: userSelectFields,
       relations: {
         teacher: true
       }
@@ -67,7 +61,6 @@ export class UsersRepository {
       where: {
         role: Role.TEACHER
       },
-      select: userSelectFields,
       relations: {
         teacher: true
       }
@@ -79,7 +72,6 @@ export class UsersRepository {
       where: {
         id: userId
       },
-      select: userSelectFields,
       relations: {
         student: true
       }
@@ -91,20 +83,19 @@ export class UsersRepository {
       where: {
         role: Role.STUDENT
       },
-      select: userSelectFields,
       relations: {
         student: true
       }
     });
   }
 
-  async update(id: UUID, updateUserDto: UpdateUserDto) {
-    const userUpdated = await this.usersRepository.update({ id }, { ...updateUserDto });
+  async update(userId: UUID, updateUserDto: UpdateUserDto): Promise<UpdateResult> {
+    const userUpdated = await this.usersRepository.update(userId, { ...updateUserDto });
 
     return userUpdated;
   }
 
-  async delete(userId) {
+  async delete(userId: UUID): Promise<UpdateResult> {
     return await this.usersRepository.softDelete(userId);
   }
 }

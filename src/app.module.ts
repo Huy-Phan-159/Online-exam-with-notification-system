@@ -1,14 +1,13 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config'; // Import the ConfigModule from the correct module
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GlobalException } from './exceptions/global.exception';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
-import { StudentsModule } from './modules/students/students.module';
-import { TeachersModule } from './modules/teachers/teachers.module';
 import { UsersModule } from './modules/users/users.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
+import { ResponseInterceptor } from './interceptors/response.interceptor';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,11 +21,10 @@ import { SharedModule } from './shared/shared.module';
       useFactory: (configService: ApiConfigService) => configService.postgresConfig,
       inject: [ApiConfigService]
     }),
-    UsersModule,
-    StudentsModule,
-    TeachersModule
+    UsersModule
   ],
   providers: [
+    { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
     {
       provide: APP_FILTER,
       useClass: GlobalException

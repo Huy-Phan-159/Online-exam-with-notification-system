@@ -14,21 +14,18 @@ export class UsersController {
   @Get()
   @ApiOkResponse({ description: 'Get all users successfully' })
   async findAll() {
-    const data = await this.usersService.findAll();
-    return data;
+    return await this.usersService.findAll();
   }
 
   @Get(':id')
   @ApiOkResponse({ description: 'Get user by id successfully' })
   async findOne(@Param('id', ParseUUIDPipe) id: UUID) {
-    const data = await this.usersService.findOne(id);
-    return data;
+    return await this.usersService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOkResponse({ description: 'The student has been successfully updated.' })
   async update(@Param('id', ParseUUIDPipe) id: UUID, @Body() updateUserDto: UpdateUserDto) {
-    const data = await this.usersService.updateUser(id, updateUserDto);
-    return data;
+    return await this.usersService.updateUser(id, updateUserDto);
   }
 }

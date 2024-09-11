@@ -15,11 +15,10 @@ export class UsersRepository {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const user = this.usersRepository.create(createUserDto);
+    const user = await this.usersRepository.create(createUserDto);
 
-    const userCreated = await this.usersRepository.save(user);
+    return await this.usersRepository.save(user);
 
-    return userCreated;
   }
 
   async findAllUser(): Promise<User[]> {

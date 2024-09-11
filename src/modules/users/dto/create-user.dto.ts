@@ -25,6 +25,7 @@ export class CreateUserDto {
   @ApiProperty({
     example: Gender.MALE
   })
+  //add type enum
   @IsString()
   gender: string;
 

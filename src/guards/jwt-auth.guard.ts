@@ -1,20 +1,14 @@
-import { Injectable, CanActivate, ExecutionContext, BadRequestException } from '@nestjs/common';
+import { BadRequestException, CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { log } from 'console';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
-import { User } from 'src/entities/user.entity';
-import { ApiConfigService } from 'src/shared/services/api-config.service';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    private reflector: Reflector, private jwtService: JwtService) {}
+    private reflector: Reflector,
+    private jwtService: JwtService
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -26,17 +20,12 @@ export class JwtAuthGuard implements CanActivate {
 
     try {
       const payload = this.jwtService.verify(token);
-      const user = await this.userRepository.findOneBy(payload.userId)
 
-      if(!user) {
-        throw new BadRequestException(ERRORS_DICTIONARY.TOKEN_ERROR);
-      }
-
-      request.user = user;
+      request['user'] = payload;
 
       return true;
-    } catch(error) {
-      throw new BadRequestException(error.message)
+    } catch (error) {
+      throw new BadRequestException(error.message);
     }
   }
 

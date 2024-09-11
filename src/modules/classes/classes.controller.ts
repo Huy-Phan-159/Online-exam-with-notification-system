@@ -1,19 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { ClassesService } from './classes.service';
 import { CreateClassDto } from './dto/create-class.dto';
 import { UpdateClassDto } from './dto/update-class.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { QueryClassDto } from './dto/query-class.dto';
 import { UUID } from 'crypto';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @Controller('classes')
 @ApiTags('classes')
+@UseGuards(JwtAuthGuard)
 export class ClassesController {
   constructor(private readonly classesService: ClassesService) {}
 
   @Post()
-  create(@Body() createClassDto: CreateClassDto) {
-    return this.classesService.create(createClassDto);
+  async create(@Body() createClassDto: CreateClassDto) {
+    return await this.classesService.create(createClassDto);
   }
 
   @Get()
@@ -29,8 +31,8 @@ export class ClassesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: UUID, @Body() updateClassDto: UpdateClassDto) {
-    return this.classesService.update(id, updateClassDto);
+  async update(@Param('id') id: UUID, @Body() updateClassDto: UpdateClassDto) {
+    return await this.classesService.update(id, updateClassDto);
   }
 
   @Delete(':id')

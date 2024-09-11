@@ -1,26 +1,24 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Catch } from '@nestjs/common';
 import { CreateClassDto } from './dto/create-class.dto';
 import { UpdateClassDto } from './dto/update-class.dto';
 import { Class } from 'src/entities/class.entity';
-import { ILike, Repository } from 'typeorm';
+import { ILike, QueryFailedError, Repository } from 'typeorm';
 import { StudentClass } from 'src/entities/student-class.entity';
 import { PaginationResult } from 'src/shared/interfaces/pagination-result.interface';
 import { UUID } from 'crypto';
 import { ResponseException } from 'src/exceptions/response/response.exception';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
+import { ClassesRepository } from './classes.repository';
 
 @Injectable()
 export class ClassesService {
-  constructor(
-    @InjectRepository(Class)
-    private readonly classesRepository: Repository<Class>,
-    @InjectRepository(StudentClass)
-    private readonly studentClassRepository: Repository<StudentClass>
-  ) {}
+  constructor(private readonly classesRepository: ClassesRepository) {}
 
   async create(createClassDto: CreateClassDto) {
-    return 'This action adds a new class';
+    return await this.classesRepository.create(createClassDto).catch((error) => {
+      throw new BadRequestException(new ResponseException(error.message));
+    });
   }
 
   async findAll(
@@ -33,41 +31,27 @@ export class ClassesService {
       return acc;
     }, {});
 
-    const skip = (page - 1) * limit;
+    return await this.classesRepository.findAll(page, limit, whereConditions).then(([records, total]) => {
+      const totalPages = Math.ceil(total / limit);
 
-    return await this.classesRepository
-      .findAndCount({
-        where: whereConditions,
-        withDeleted: false,
-        skip: skip,
-        take: limit,
-        relations: {
-          studentClass: true,
-          examClass: true
-        }
-      })
-      .then(([records, total]) => {
-        const totalPages = Math.ceil(total / limit);
-
-        return {
-          records,
-          total,
-          page,
-          limit,
-          totalPages
-        };
-      });
+      return {
+        records,
+        total,
+        page,
+        limit,
+        totalPages
+      };
+    });
   }
 
-  async findOne(id: UUID) {
-    return await this.classesRepository
-      .findOne({
-        where: { id },
-        withDeleted: false,
-        relations: {
-          studentClass: true
-        }
-      })
+  async findOne(id: UUID, searchQueries: Record<string, any> = {}) {
+    const whereConditions = Object.entries(searchQueries).reduce((acc, [key, value]) => {
+      acc[key] = typeof value === 'string' ? ILike(`%${value}%`) : value;
+      return acc;
+    }, {});
+
+    return this.classesRepository
+      .findOne(id, whereConditions)
       .then((classData) => {
         if (!classData) {
           throw new BadRequestException(
@@ -78,14 +62,21 @@ export class ClassesService {
         }
 
         return classData;
+      })
+      .catch((error) => {
+        throw new BadRequestException(new ResponseException(error.message));
       });
   }
 
   async update(id: UUID, updateClassDto: UpdateClassDto) {
-    return `This action updates a #${id} class`;
+    return this.classesRepository.update(id, updateClassDto).catch((error) => {
+      throw new BadRequestException(new ResponseException(error.message));
+    });
   }
 
   async remove(id: UUID) {
-    return `This action removes a #${id} class`;
+    return this.classesRepository.remove(id).catch((error) => {
+      throw new BadRequestException(new ResponseException(error.message));
+    });
   }
 }

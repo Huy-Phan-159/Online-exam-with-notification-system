@@ -3,11 +3,12 @@ import { ConfigModule } from '@nestjs/config'; // Import the ConfigModule from t
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GlobalException } from './exceptions/global.exception';
+import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
+import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
-import { ResponseInterceptor } from './interceptors/response.interceptor';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -21,7 +22,8 @@ import { ResponseInterceptor } from './interceptors/response.interceptor';
       useFactory: (configService: ApiConfigService) => configService.postgresConfig,
       inject: [ApiConfigService]
     }),
-    UsersModule
+    UsersModule,
+    AuthModule
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },

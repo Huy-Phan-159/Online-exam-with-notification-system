@@ -6,30 +6,29 @@ import { UUID } from 'crypto';
 import { Exam } from 'src/entities/exam.entity';
 import { CreateExamDto } from './dto/create-exam.dto';
 import { UpdateExamDto } from './dto/update-exam.dto';
-import { Teacher } from 'src/entities/teacher.entity';
+import { UsersRepository } from '../users/users.repository';
 
 @Injectable()
-export class ExamService {
+export class ExamsService {
   constructor(
     @InjectRepository(Exam)
-    private examRepository: Repository<Exam>,
-    @InjectRepository(Teacher)
-    private teacherRepository: Repository<Teacher>
+    private examsRepository: Repository<Exam>,
+    private usersRepository: UsersRepository
   ) {}
 
   async create(createExamDto: CreateExamDto, userId: UUID): Promise<Exam> {
-    const existingExam = await this.examRepository.findOne({ where: { name: createExamDto.name } });
+    const existingExam = await this.examsRepository.findOne({ where: { name: createExamDto.name } });
     if (existingExam) {
       throw new BadRequestException(ERRORS_DICTIONARY.EXAM_NAME_EXIST);
     }
-    const teacher = await this.teacherRepository.findOne({ where: { user: { id: userId } } });
+    const teacher = (await this.usersRepository.findOneTeacher(userId)).teacher;
 
-    const newExam = this.examRepository.create({
+    const newExam = this.examsRepository.create({
       ...createExamDto,
       teacher: { id: teacher.id },
       category: { id: createExamDto.categoryId }
     });
-    return await this.examRepository.save(newExam);
+    return await this.examsRepository.save(newExam);
   }
 
   async findAll(
@@ -39,7 +38,7 @@ export class ExamService {
   ): Promise<{ data: Exam[]; totalPages: number; currentPage: number }> {
     const whereClause = search ? [{ name: ILike(`%${search}%`) }, { description: ILike(`%${search}%`) }] : {};
 
-    const [data, totalItems] = await this.examRepository.findAndCount({
+    const [data, totalItems] = await this.examsRepository.findAndCount({
       where: whereClause,
       skip: (page - 1) * limit,
       take: limit
@@ -55,7 +54,7 @@ export class ExamService {
   }
 
   async findOne(id: UUID): Promise<Exam> {
-    const examData = await this.examRepository.findOneBy({ id });
+    const examData = await this.examsRepository.findOneBy({ id });
     if (!examData) {
       throw new BadRequestException(ERRORS_DICTIONARY.EXAM_NOT_FOUND);
     }
@@ -67,15 +66,15 @@ export class ExamService {
     if (!existingExam) {
       throw new BadRequestException(ERRORS_DICTIONARY.EXAM_NOT_FOUND);
     }
-    const examData = this.examRepository.merge(existingExam, updateExamDto);
-    return await this.examRepository.save(examData);
+    const examData = this.examsRepository.merge(existingExam, updateExamDto);
+    return await this.examsRepository.save(examData);
   }
 
   async remove(id: UUID): Promise<DeleteResult> {
-    const exam = await this.examRepository.findOneBy({ id });
+    const exam = await this.examsRepository.findOneBy({ id });
     if (!exam) {
       throw new BadRequestException(ERRORS_DICTIONARY.EXAM_NOT_FOUND);
     }
-    return await this.examRepository.softDelete({ id });
+    return await this.examsRepository.softDelete({ id });
   }
 }

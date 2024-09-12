@@ -5,6 +5,7 @@ import { Class } from 'src/entities/class.entity';
 import { StudentClass } from 'src/entities/student-class.entity';
 import { FindOptionsWhere, QueryFailedError, Repository, UpdateResult } from 'typeorm';
 import { UpdateClassDto } from './dto/update-class.dto';
+import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
 
 export class ClassesRepository {
   constructor(
@@ -47,23 +48,42 @@ export class ClassesRepository {
   ): Promise<[Class[], number]> {
     const skip = (page - 1) * limit;
 
-    return await this.classesRepository.findAndCount({
-      where: whereConditions,
-      withDeleted: false,
-      skip: skip,
-      take: limit
-    });
+    return await this.classesRepository
+      .findAndCount({
+        where: whereConditions,
+        withDeleted: false,
+        skip: skip,
+        take: limit
+      })
+      .then((result) => {
+        const [foundClass, total] = result;
+        if (!total) throw new Error(ERRORS_DICTIONARY.NOT_FOUND_ANY_CLASS);
+
+        return result;
+      })
+      .catch((error) => {
+        throw error;
+      });
   }
 
-  async findOne(id: UUID, whereConditions: FindOptionsWhere<Class> = {}): Promise<Class> {
-    return await this.classesRepository.findOne({
-      where: { id, ...whereConditions },
-      withDeleted: false,
-      relations: {
-        studentClass: true,
-        examClass: true
-      }
-    });
+  async findOne(id: UUID): Promise<Class> {
+    return await this.classesRepository
+      .findOne({
+        where: { id },
+        withDeleted: false,
+        relations: {
+          studentClass: true,
+          examClass: true
+        }
+      })
+      .then((foundClass) => {
+        if (!foundClass) throw new Error(ERRORS_DICTIONARY.NOT_FOUND_ANY_CLASS);
+
+        return foundClass;
+      })
+      .catch((error) => {
+        throw error;
+      });
   }
 
   async update(id: UUID, updateClassDto: UpdateClassDto): Promise<Class> {
@@ -75,8 +95,8 @@ export class ClassesRepository {
 
     if (studentIds && studentIds.length)
       await this.findOne(id)
-        .then((foundClassDto) => {
-          foundClassDto.studentClass.forEach(async (studentClass) => {
+        .then((foundClass) => {
+          foundClass.studentClass.forEach(async (studentClass) => {
             await this.studentClassRepository.delete(studentClass.id);
           });
 
@@ -92,8 +112,15 @@ export class ClassesRepository {
   }
 
   async remove(id: UUID): Promise<UpdateResult> {
-    return await this.classesRepository.softDelete(id).catch((error) => {
-      throw error;
-    });
+    return await this.classesRepository
+      .softDelete(id)
+      .then((updateResult) => {
+        if (!updateResult.affected) throw new Error(ERRORS_DICTIONARY.NOT_RECORD_WAS_DELETED);
+
+        return updateResult;
+      })
+      .catch((error) => {
+        throw error;
+      });
   }
 }

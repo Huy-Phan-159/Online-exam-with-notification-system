@@ -45,27 +45,9 @@ export class ClassesService {
   }
 
   async findOne(id: UUID, searchQueries: Record<string, any> = {}) {
-    const whereConditions = Object.entries(searchQueries).reduce((acc, [key, value]) => {
-      acc[key] = typeof value === 'string' ? ILike(`%${value}%`) : value;
-      return acc;
-    }, {});
-
-    return this.classesRepository
-      .findOne(id, whereConditions)
-      .then((classData) => {
-        if (!classData) {
-          throw new BadRequestException(
-            new ResponseException(ERRORS_DICTIONARY.NOT_FOUND_ANY_CLASS, [
-              `Not found any class has id=${id} in DB`
-            ])
-          );
-        }
-
-        return classData;
-      })
-      .catch((error) => {
-        throw new BadRequestException(new ResponseException(error.message));
-      });
+    return this.classesRepository.findOne(id).catch((error) => {
+      throw new BadRequestException(new ResponseException(error.message));
+    });
   }
 
   async update(id: UUID, updateClassDto: UpdateClassDto) {

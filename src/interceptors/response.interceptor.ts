@@ -14,7 +14,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, any> {
     if (skip) return next.handle();
     return next.handle().pipe(
       map((data) => ({
-        status: statusCode,
+        statusCode: statusCode,
         data
       }))
     );

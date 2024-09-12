@@ -31,7 +31,7 @@ export class ExamController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createExamDto: CreateExamDto, @Req() req: Request) {
-    const userId = req['user'].userId;
+    const userId = req['user'].id;
     return await this.examService.create(createExamDto, userId);
   }
 

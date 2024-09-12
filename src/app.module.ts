@@ -9,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -23,7 +24,8 @@ import { SharedModule } from './shared/shared.module';
       inject: [ApiConfigService]
     }),
     UsersModule,
-    AuthModule
+    AuthModule,
+    CategoriesModule
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },

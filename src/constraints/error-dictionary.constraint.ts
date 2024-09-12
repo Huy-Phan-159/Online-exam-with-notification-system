@@ -22,5 +22,8 @@ export enum ERRORS_DICTIONARY {
 
   // EXAM
   EXAM_NOT_FOUND = 'Exam not found',
-  EXAM_NAME_EXIST = 'Exam name already exists'
+  EXAM_NAME_EXIST = 'Exam name already exists',
+
+  // Category 
+  NOT_FOUND_ANY_CATEGORY = 'Not found any category'
 }

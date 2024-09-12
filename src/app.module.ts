@@ -13,6 +13,8 @@ import { TeachersModule } from './modules/teachers/teachers.module';
 import { UsersModule } from './modules/users/users.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { StudentsModule } from './modules/students/students.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -31,7 +33,9 @@ import { SharedModule } from './shared/shared.module';
     QuestionsModule,
     ClassesModule,
     ExamsModule,
-    TeachersModule
+    TeachersModule,
+    StudentsModule,
+    CategoriesModule
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },

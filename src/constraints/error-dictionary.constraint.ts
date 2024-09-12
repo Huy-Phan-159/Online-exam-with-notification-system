@@ -14,5 +14,7 @@ export enum ERRORS_DICTIONARY {
   QUESTION_NOT_FOUND = 'Question not found',
 
   //author
-  NOT_RIGHTS = 'Not rights'
+  NOT_RIGHTS = 'Not rights',
+  NOT_FOUND_ANY_CATEGORY = 'Not found any category',
+  NOT_RECORD_WAS_DELETED = 'NOT record was deleted'
 }

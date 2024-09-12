@@ -11,7 +11,7 @@ import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
 import { QuestionsModule } from './modules/questions/questions.module';
 import { ClassesModule } from './modules/classes/classes.module';
-import { ExamModule } from './modules/exam/exam.module';
+import { ExamsModule } from './modules/exams/exams.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -29,7 +29,7 @@ import { ExamModule } from './modules/exam/exam.module';
     AuthModule,
     QuestionsModule,
     ClassesModule,
-    ExamModule
+    ExamsModule
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },

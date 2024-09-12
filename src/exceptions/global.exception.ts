@@ -16,14 +16,7 @@ export class GlobalException implements ExceptionFilter {
     response.status(status).json({
       success: false,
       data: null,
-      message,
-      error:
-        this.config_service.get('NODE_ENV') === 'development'
-          ? {
-              response: exception.response,
-              stack: exception.stack
-            }
-          : null
+      message
     });
   }
 }

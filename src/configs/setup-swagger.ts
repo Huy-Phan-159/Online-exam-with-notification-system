@@ -12,7 +12,17 @@ export function configSwagger(app: INestApplication) {
     .setTitle('Exam Online project')
     .setDescription('## The Online Exam API description')
     .setVersion('1.0')
-    .addSecurity('token', { type: 'http', scheme: 'bearer' })
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header'
+      },
+      'JWT-auth'
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
 
@@ -31,10 +41,10 @@ export function configSwagger(app: INestApplication) {
     function unauthorizedResponse(): void {
       if (http_adapter.getType() === 'fastify') {
         res.statusCode = 401;
-        res.setHeader('WWW-Authenticate', 'Basic');
+        res.setHeader('WWW-Authenticate', 'Bearer');
       } else {
         res.status(401);
-        res.set('WWW-Authenticate', 'Basic');
+        res.set('WWW-Authenticate', 'Bearer');
       }
 
       next();

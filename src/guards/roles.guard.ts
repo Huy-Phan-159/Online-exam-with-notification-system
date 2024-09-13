@@ -1,9 +1,7 @@
 import { Role } from 'src/entities/enums/role.enum';
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException, BadRequestException } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
-
-
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -12,7 +10,7 @@ export class RolesGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const requiredRoles = this.reflector.getAllAndOverride<Role[]>('roles', [
       context.getHandler(),
-      context.getClass(),
+      context.getClass()
     ]);
 
     if (!requiredRoles) {

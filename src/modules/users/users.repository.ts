@@ -18,7 +18,6 @@ export class UsersRepository {
     const user = await this.usersRepository.create(createUserDto);
 
     return await this.usersRepository.save(user);
-
   }
 
   async findAllUser(): Promise<User[]> {

@@ -35,7 +35,8 @@ import { StudentsModule } from './modules/students/students.module';
     ExamsModule,
     TeachersModule,
     StudentsModule,
-    CategoriesModule
+    CategoriesModule,
+    ClassesModule
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },

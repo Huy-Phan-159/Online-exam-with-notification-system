@@ -10,7 +10,9 @@ import { UsersService } from './modules/users/users.service';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    
+  });
   const configService = app.select(SharedModule).get(ApiConfigService);
 
   const port = configService.serverConfig.port;

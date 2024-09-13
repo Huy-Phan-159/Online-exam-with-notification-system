@@ -1,6 +1,6 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, ILike, Repository } from 'typeorm';
+import { DeleteResult, ILike, Repository, UpdateResult } from 'typeorm';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
 import { UUID } from 'crypto';
 import { Exam } from 'src/entities/exam.entity';
@@ -61,20 +61,13 @@ export class ExamsService {
     return examData;
   }
 
-  async update(id: UUID, updateExamDto: UpdateExamDto): Promise<Exam> {
-    const existingExam = await this.findOne(id);
-    if (!existingExam) {
-      throw new BadRequestException(ERRORS_DICTIONARY.EXAM_NOT_FOUND);
-    }
-    const examData = this.examsRepository.merge(existingExam, updateExamDto);
-    return await this.examsRepository.save(examData);
+  async update(id: UUID, updateExamDto: UpdateExamDto): Promise<UpdateResult> {
+    await this.findOne(id);
+    return await this.examsRepository.update(id, updateExamDto);
   }
 
   async remove(id: UUID): Promise<DeleteResult> {
-    const exam = await this.examsRepository.findOneBy({ id });
-    if (!exam) {
-      throw new BadRequestException(ERRORS_DICTIONARY.EXAM_NOT_FOUND);
-    }
+    await this.findOne(id);
     return await this.examsRepository.softDelete({ id });
   }
 }

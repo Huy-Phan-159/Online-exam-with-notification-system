@@ -15,11 +15,7 @@ export class GlobalException implements ExceptionFilter {
 
     response.status(status).json({
       statusCode: status,
-<<<<<<< HEAD
       message
-=======
-      message,
->>>>>>> rebasing: rebase develop
     });
   }
 }

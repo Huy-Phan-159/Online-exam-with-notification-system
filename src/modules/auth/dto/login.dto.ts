@@ -16,7 +16,7 @@ export class LoginDto {
   @MaxLength(255)
   @ApiProperty({
     description: 'password of user',
-    example: '123'
+    example: 'admin'
   })
   password: string;
 }

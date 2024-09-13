@@ -41,10 +41,10 @@ export function configSwagger(app: INestApplication) {
     function unauthorizedResponse(): void {
       if (http_adapter.getType() === 'fastify') {
         res.statusCode = 401;
-        res.setHeader('WWW-Authenticate', 'Basic');
+        res.setHeader('WWW-Authenticate', 'Bearer');
       } else {
         res.status(401);
-        res.set('WWW-Authenticate', 'Basic');
+        res.set('WWW-Authenticate', 'Bearer');
       }
 
       next();

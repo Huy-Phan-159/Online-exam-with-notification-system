@@ -137,21 +137,23 @@ export class UsersRepository {
   async delete(userId: UUID): Promise<UpdateResult> {
     return await this.usersRepository.softDelete(userId);
   }
-  async updatePassword(newPassword: string, userId:UUID) {
-    const foundUser = await this.findUserById(userId)
+  async updatePassword(newPassword: string, userId: UUID) {
+    const foundUser = await this.findUserById(userId);
     if (!foundUser) {
       throw new BadRequestException({
-        message:ERRORS_DICTIONARY.USER_NOT_FOUND
-      })
+        message: ERRORS_DICTIONARY.USER_NOT_FOUND
+      });
     }
-    foundUser.password = newPassword
-    const { raw } = await this.usersRepository.update({
-      id:userId
-    },
-    {
-      password:newPassword
-    })
-    
-    return raw
-  };
+    foundUser.password = newPassword;
+    const { raw } = await this.usersRepository.update(
+      {
+        id: userId
+      },
+      {
+        password: newPassword
+      }
+    );
+
+    return raw;
+  }
 }

@@ -13,7 +13,7 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
-    private readonly mailService:MailService
+    private readonly mailService: MailService
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -37,13 +37,13 @@ export class AuthService {
   }
 
   async forgotPassword(userEmail: string) {
-    const foundUser=await this.usersService.findOneByEmail(userEmail)
+    const foundUser = await this.usersService.findOneByEmail(userEmail);
     const payload = {
-      userId:foundUser.id
-    }
-    const token = this.jwtService.sign(payload)
-    const resetLink = `http://localhost:4000/reset-password?token=${token}`
-    const newTemplate  = new ResetPasswordTemplate(resetLink)
+      userId: foundUser.id
+    };
+    const token = this.jwtService.sign(payload);
+    const resetLink = `http://localhost:4000/reset-password?token=${token}`;
+    const newTemplate = new ResetPasswordTemplate(resetLink);
     const dto: MailDTO = {
       from: 'Auth-backend service',
       to: userEmail,
@@ -54,15 +54,13 @@ export class AuthService {
     await this.mailService.sendMail(dto);
   }
 
-  async resetPassword(token: string, newPassword:string) {
+  async resetPassword(token: string, newPassword: string) {
     try {
       const payload = this.jwtService.verify(token, { secret: process.env.JWT_SECRET_KEY });
-      const password = await bcrypt.hash(newPassword, 10)
-      return await this.usersService.updatePassword(password,payload.userId)
+      const password = await bcrypt.hash(newPassword, 10);
+      return await this.usersService.updatePassword(password, payload.userId);
     } catch (error) {
       throw new BadRequestException(error.message);
     }
-    
-    
   }
 }

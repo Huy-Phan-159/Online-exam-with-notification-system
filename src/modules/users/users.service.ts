@@ -47,14 +47,14 @@ export class UsersService {
     return await this.usersRepository.update(userId, updateUserDto);
   }
 
-  async updatePassword(newPassword: string, userId:UUID) {
-    await this.findOne(userId)
+  async updatePassword(newPassword: string, userId: UUID) {
+    await this.findOne(userId);
     const raw = await this.usersRepository.updatePassword(newPassword, userId);
     if (raw === 0) {
       throw new BadRequestException({
-        message:ERRORS_DICTIONARY.RESET_PASSWORD_FAIL
-      })
+        message: ERRORS_DICTIONARY.RESET_PASSWORD_FAIL
+      });
     }
-    return raw
+    return raw;
   }
 }

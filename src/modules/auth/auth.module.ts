@@ -18,6 +18,6 @@ import { MailService } from 'src/shared/services/mail.service';
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService,MailService]
+  providers: [AuthService, MailService]
 })
 export class AuthModule {}

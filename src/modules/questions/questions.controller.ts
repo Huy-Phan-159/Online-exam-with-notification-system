@@ -9,7 +9,8 @@ import {
   Request,
   Query,
   UseInterceptors,
-  UseGuards
+  UseGuards,
+  ParseUUIDPipe
 } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
@@ -40,8 +41,8 @@ export class QuestionsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateQuestionDto: UpdateQuestionDto) {
-    return this.questionsService.update(+id, updateQuestionDto);
+  async update(@Param('id', new ParseUUIDPipe()) id: UUID, @Body() updateQuestionDto: UpdateQuestionDto) {
+    return await this.questionsService.update(id, updateQuestionDto);
   }
 
   @UseGuards(JwtAuthGuard)

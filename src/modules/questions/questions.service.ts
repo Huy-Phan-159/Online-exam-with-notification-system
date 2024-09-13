@@ -2,12 +2,13 @@ import { BadRequestException, ForbiddenException, Injectable, NotAcceptableExcep
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { Question } from 'src/entities/question.entity';
 import { UsersService } from '../users/users.service';
 import { UUID } from 'crypto';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
 import { Paginate } from './dto/paginate.dto';
+import { error } from 'console';
 
 @Injectable()
 export class QuestionsService {
@@ -71,12 +72,28 @@ export class QuestionsService {
     return await this.questionRepository.findOne({
       where: {
         id: questionId
-      }
+      },
+      relations: { category: true }
     });
   }
 
-  update(id: number, updateQuestionDto: UpdateQuestionDto) {
-    return `This action updates a #${id} question`;
+  async update(id: UUID, updateQuestionDto: UpdateQuestionDto): Promise<Question> {
+    return await this.questionRepository
+      .update(id, updateQuestionDto)
+      .then((updateResult) => {
+        if (!updateResult.affected)
+          throw new BadRequestException({
+            message: ERRORS_DICTIONARY.NOT_RECORD_WAS_UPDATED
+          });
+
+        return id;
+      })
+      .then(async (updatedQuestionId) => {
+        return await this.findOne(updatedQuestionId);
+      })
+      .catch((error) => {
+        throw error;
+      });
   }
 
   async remove(questionId: UUID) {

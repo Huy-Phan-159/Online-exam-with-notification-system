@@ -5,6 +5,7 @@ import { Option } from './option.entity';
 import { Category } from './category.entity';
 import { ExamQuestion } from './exam-question.entity';
 import { QuestionType } from './enums/question-type.enum';
+import { string } from 'joi';
 
 @Entity('questions')
 export class Question extends BaseEntity {
@@ -20,6 +21,11 @@ export class Question extends BaseEntity {
     nullable: false
   })
   public content: string;
+
+  @Column({
+    type: 'uuid'
+  })
+  public categoryId: string;
 
   @ManyToOne(() => Teacher, (teacher) => teacher.questions)
   public teacher: Teacher;

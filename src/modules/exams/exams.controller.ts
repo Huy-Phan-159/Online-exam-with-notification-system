@@ -41,6 +41,11 @@ export class ExamsController {
     return await this.examsService.findAll(page, limit, search);
   }
 
+  @Get(':id/questions')
+  async getQuestionsInExam(@Param('id', new ParseUUIDPipe()) id: UUID) {
+    return await this.examsService.getQuestionsInExam(id);
+  }
+
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: UUID) {
     return await this.examsService.findOne(id);

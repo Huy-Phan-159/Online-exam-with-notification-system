@@ -23,13 +23,13 @@ export class ExamClass extends BaseEntity {
   public class: Class;
 
   @Column({
-    type: 'date',
+    type: 'timestamp',
     nullable: false
   })
   public timeStart: Date;
 
   @Column({
-    type: 'date',
+    type: 'timestamp',
     nullable: false
   })
   public timeEnd: Date;

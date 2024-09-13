@@ -97,4 +97,12 @@ export class QuestionsService {
     }
     return question;
   }
+
+  async findQuestionByCategory(categoryId: UUID): Promise<Question[]> {
+    return await this.questionRepository.find({
+      where: {
+        category: { id: categoryId }
+      }
+    });
+  }
 }

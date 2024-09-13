@@ -7,17 +7,28 @@ import { Exam } from 'src/entities/exam.entity';
 import { CreateExamDto } from './dto/create-exam.dto';
 import { UpdateExamDto } from './dto/update-exam.dto';
 import { UsersRepository } from '../users/users.repository';
+import { ExamQuestion } from 'src/entities/exam-question.entity';
+import { QuestionsService } from '../questions/questions.service';
+import { Question } from 'src/entities/question.entity';
+import { ExamClass } from 'src/entities/exam-class.entity';
 
 @Injectable()
 export class ExamsService {
   constructor(
     @InjectRepository(Exam)
     private examsRepository: Repository<Exam>,
-    private usersRepository: UsersRepository
+    private usersRepository: UsersRepository,
+    @InjectRepository(ExamQuestion)
+    private examQuestionsRepository: Repository<ExamQuestion>,
+    @InjectRepository(ExamClass)
+    private examClassRepository: Repository<ExamClass>,
+    private questionsService: QuestionsService
   ) {}
 
   async create(createExamDto: CreateExamDto, userId: UUID): Promise<Exam> {
-    const existingExam = await this.examsRepository.findOne({ where: { name: createExamDto.name } });
+    const { name, categoryId, numberOfQuestions, classIds, timeStart, timeEnd } = createExamDto;
+
+    const existingExam = await this.examsRepository.findOne({ where: { name: name } });
     if (existingExam) {
       throw new BadRequestException(ERRORS_DICTIONARY.EXAM_NAME_EXIST);
     }
@@ -26,9 +37,40 @@ export class ExamsService {
     const newExam = this.examsRepository.create({
       ...createExamDto,
       teacher: { id: teacher.id },
-      category: { id: createExamDto.categoryId }
+      category: { id: categoryId }
     });
-    return await this.examsRepository.save(newExam);
+    await this.examsRepository.save(newExam);
+
+    // Create exam_class
+    classIds.forEach(async (classId) => {
+      const newExamClass = this.examClassRepository.create({
+        exam: { id: newExam.id },
+        class: { id: classId },
+        timeStart: new Date(timeStart),
+        timeEnd: new Date(timeEnd)
+      });
+      await this.examClassRepository.save(newExamClass);
+    });
+
+    // Create exam_question
+    const questions = await this.questionsService.findQuestionByCategory(categoryId);
+    for (let i = questions.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [questions[i], questions[randomIndex]] = [questions[randomIndex], questions[i]];
+    }
+
+    const selectedQuestions = questions.slice(0, numberOfQuestions);
+
+    selectedQuestions.forEach(async (question, index) => {
+      const newExamQuestion = this.examQuestionsRepository.create({
+        order: index + 1,
+        exam: { id: newExam.id },
+        question: { id: question.id }
+      });
+      await this.examQuestionsRepository.save(newExamQuestion);
+    });
+
+    return newExam;
   }
 
   async findAll(
@@ -53,8 +95,11 @@ export class ExamsService {
     };
   }
 
-  async findOne(id: UUID): Promise<Exam> {
-    const examData = await this.examsRepository.findOneBy({ id });
+  async findOne(id: UUID, relations?: string[]): Promise<Exam> {
+    const examData = await this.examsRepository.findOne({
+      where: { id },
+      relations: relations
+    });
     if (!examData) {
       throw new BadRequestException(ERRORS_DICTIONARY.EXAM_NOT_FOUND);
     }
@@ -67,7 +112,34 @@ export class ExamsService {
   }
 
   async remove(id: UUID): Promise<DeleteResult> {
-    await this.findOne(id);
-    return await this.examsRepository.softDelete({ id });
+    const exam = await this.findOne(id, ['examQuestion', 'examClass']);
+    await Promise.all(
+      exam.examQuestion.map(async (examToQuestion) => {
+        await this.examQuestionsRepository.delete(examToQuestion.id);
+      })
+    );
+    await Promise.all(
+      exam.examClass.map(async (examClass) => {
+        await this.examClassRepository.delete(examClass.id);
+      })
+    );
+    return await this.examsRepository.delete({ id });
+  }
+
+  async getQuestionsInExam(id: UUID): Promise<Question[]> {
+    const exam = await this.examsRepository.findOne({
+      where: { id },
+      relations: ['examQuestion', 'examQuestion.question'],
+      order: {
+        examQuestion: {
+          order: 'ASC'
+        }
+      }
+    });
+    if (!exam) {
+      throw new BadRequestException(ERRORS_DICTIONARY.EXAM_NOT_FOUND);
+    }
+    const questions = exam.examQuestion.map((examQuestion) => examQuestion.question);
+    return questions;
   }
 }

@@ -1,27 +1,19 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Request,
-  Query,
-  UseInterceptors,
-  UseGuards
-} from '@nestjs/common';
-import { QuestionsService } from './questions.service';
-import { CreateQuestionDto } from './dto/create-question.dto';
-import { UpdateQuestionDto } from './dto/update-question.dto';
-import { UUID } from 'crypto';
-import { ApiTags } from '@nestjs/swagger';
-import { Paginate } from './dto/paginate.dto';
-import { FindOneQuestionDTO } from './dto/find-one-question.dto';
-import { TransformInterceptor } from 'src/interceptors/transform-responce.interceptor';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/decorators/get-user.decorator';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/entities/enums/role.enum';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { CreateQuestionDto } from './dto/create-question.dto';
+import { FindOneQuestionDTO } from './dto/find-one-question.dto';
+import { Paginate } from './dto/paginate.dto';
+import { UpdateQuestionDto } from './dto/update-question.dto';
+import { QuestionsService } from './questions.service';
 
+@Roles(Role.TEACHER)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth('JWT-auth')
 @ApiTags('Questions')
 @Controller('questions')
 export class QuestionsController {

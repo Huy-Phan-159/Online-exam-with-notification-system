@@ -1,11 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { UUID } from 'crypto';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/entities/enums/role.enum';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 import { QueryCategoryDto } from './dto/query-category.dto';
-import { UUID } from 'crypto';
-import { ApiTags } from '@nestjs/swagger';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
+@Roles(Role.ADMIN)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth('JWT-auth')
 @ApiTags('categories')
 @Controller('categories')
 export class CategoriesController {

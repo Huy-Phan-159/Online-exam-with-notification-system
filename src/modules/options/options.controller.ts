@@ -3,11 +3,17 @@ import { OptionsService } from './options.service';
 import { CreateOptionDto } from './dto/create-option.dto';
 import { UpdateOptionDto } from './dto/update-option.dto';
 import { UUID } from 'crypto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { FindOneOptionDTO } from './dto/find-one-option.dto';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { User } from 'src/decorators/get-user.decorator';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/entities/enums/role.enum';
+import { RolesGuard } from 'src/guards/roles.guard';
 
+@Roles(Role.ADMIN)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth('JWT-auth')
 @Controller('options')
 @ApiTags('Options')
 export class OptionsController {

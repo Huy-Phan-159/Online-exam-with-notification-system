@@ -7,17 +7,25 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UUID } from 'crypto';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/entities/enums/role.enum';
 import { User } from 'src/entities/user.entity';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
 import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
 import { UpdateResult } from 'typeorm';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
 import { TeachersService } from './teachers.service';
 
+@Roles(Role.ADMIN)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth('JWT-auth')
 @Controller('teacher')
 @ApiTags('Teacher')
 @UseInterceptors(LoggingInterceptor)

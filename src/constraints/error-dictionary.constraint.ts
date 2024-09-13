@@ -15,6 +15,10 @@ export enum ERRORS_DICTIONARY {
 
   //author
   NOT_RIGHTS = 'Not rights',
-  NOT_FOUND_ANY_CATEGORY = 'Not found any category',
-  NOT_RECORD_WAS_DELETED = 'NOT record was deleted'
+  // CLASS ENTITY
+  NOT_FOUND_ANY_CLASS = 'Not found any class',
+  UNIQUE_CONSTRAINT = 'Unique constraint',
+  NOT_RECORD_WAS_DELETED = 'NOT record was deleted',
+
+  NOT_FOUND_ANY_CATEGORY = 'Not found any category'
 }

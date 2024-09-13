@@ -61,5 +61,6 @@ export class AuthService {
     } catch (error) {
       throw new BadRequestException(error.message);
     }
+
   }
 }

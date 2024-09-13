@@ -2,11 +2,17 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } f
 import { ClassesService } from './classes.service';
 import { CreateClassDto } from './dto/create-class.dto';
 import { UpdateClassDto } from './dto/update-class.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { QueryClassDto } from './dto/query-class.dto';
 import { UUID } from 'crypto';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/entities/enums/role.enum';
+import { RolesGuard } from 'src/guards/roles.guard';
 
+@Roles(Role.ADMIN)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth('JWT-auth')
 @Controller('classes')
 @ApiTags('classes')
 export class ClassesController {

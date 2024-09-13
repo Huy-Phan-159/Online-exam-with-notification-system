@@ -1,26 +1,32 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
   Param,
-  UseInterceptors,
   ParseUUIDPipe,
-  Post,
-  Body,
   Patch,
-  Delete,
+  Post,
   Query,
+  Req,
   UseGuards,
-  Req
+  UseInterceptors
 } from '@nestjs/common';
-import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
-import { UUID } from 'crypto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { ExamsService } from './exams.service';
-import { CreateExamDto } from './dto/create-exam.dto';
-import { UpdateExamDto } from './dto/update-exam.dto';
-import { ExamQueryDto } from './dto/query-exam.dto';
+import { UUID } from 'crypto';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/entities/enums/role.enum';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
+import { CreateExamDto } from './dto/create-exam.dto';
+import { ExamQueryDto } from './dto/query-exam.dto';
+import { UpdateExamDto } from './dto/update-exam.dto';
+import { ExamsService } from './exams.service';
 
+@Roles(Role.TEACHER)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth('JWT-auth')
 @ApiBearerAuth()
 @ApiTags('Exams')
 @Controller('exams')

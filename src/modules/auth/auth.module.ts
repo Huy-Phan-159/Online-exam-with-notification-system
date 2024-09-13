@@ -4,6 +4,7 @@ import { ApiConfigService } from 'src/shared/services/api-config.service';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { MailService } from 'src/shared/services/mail.service';
 
 @Module({
   imports: [
@@ -17,6 +18,6 @@ import { AuthService } from './auth.service';
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService]
+  providers: [AuthService,MailService]
 })
 export class AuthModule {}

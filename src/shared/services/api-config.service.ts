@@ -80,7 +80,7 @@ export class ApiConfigService {
       migrationsRun: true,
       migrations: [`${__dirname}/../../db/migrations/*{.ts,.js}`],
       migrationsTableName: 'migrations',
-      ssl: this.getBoolean('DB_SSL'),
+      // ssl: this.getBoolean('DB_SSL'),
       logging: this.getBoolean('ENABLE_ORM_LOGS')
     };
   }

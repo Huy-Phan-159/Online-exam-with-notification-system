@@ -1,8 +1,8 @@
-import { ConfigService } from "@nestjs/config";
-import { ApiConfigService } from "./api-config.service";
+import { ConfigService } from '@nestjs/config';
+import { ApiConfigService } from './api-config.service';
 import * as nodemailer from 'nodemailer';
-import { MailDTO } from "../interfaces/mail.dto";
-import { Injectable } from "@nestjs/common";
+import { MailDTO } from '../interfaces/mail.dto';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class MailService {
@@ -18,7 +18,7 @@ export class MailService {
       }
     });
   }
-  async sendMail(dto:MailDTO) {
+  async sendMail(dto: MailDTO) {
     await this.transporter.sendMail(dto);
   }
 }

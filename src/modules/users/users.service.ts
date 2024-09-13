@@ -69,9 +69,9 @@ export class UsersService {
     const raw = await this.usersRepository.updatePassword(newPassword, userId);
     if (raw === 0) {
       throw new BadRequestException({
-        message:ERRORS_DICTIONARY.RESET_PASSWORD_FAIL
-      })
+        message: ERRORS_DICTIONARY.RESET_PASSWORD_FAIL
+      });
     }
-    return raw
+    return raw;
   }
 }

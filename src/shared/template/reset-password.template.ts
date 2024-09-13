@@ -1,10 +1,9 @@
-
 export class ResetPasswordTemplate {
-  private resetLink:string
+  private resetLink: string;
   constructor(resetLink: string) {
-    this.resetLink=resetLink
+    this.resetLink = resetLink;
   }
-  getTemplate():string{
+  getTemplate(): string {
     return `<p>You requested a password reset. Click the link below to reset your password:</p><p><a href="${this.resetLink}">Reset Password</a></p>`;
   }
 }

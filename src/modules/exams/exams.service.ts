@@ -95,24 +95,18 @@ export class ExamsService {
     };
   }
 
-  async findOne(id: UUID, relations?: string[]): Promise<Exam> {
-    const examData = await this.examsRepository.findOne({
-      where: { id },
-      relations: relations
-    });
-    if (!examData) {
-      throw new BadRequestException(ERRORS_DICTIONARY.EXAM_NOT_FOUND);
-    }
+  async findOne(id: UUID): Promise<Exam> {
+    const examData = await this.findExamExist(id);
     return examData;
   }
 
   async update(id: UUID, updateExamDto: UpdateExamDto): Promise<UpdateResult> {
-    await this.findOne(id);
+    await this.findExamExist(id);
     return await this.examsRepository.update(id, updateExamDto);
   }
 
   async remove(id: UUID): Promise<DeleteResult> {
-    const exam = await this.findOne(id, ['examQuestion', 'examClass']);
+    const exam = await this.findExamExist(id, ['examQuestion', 'examClass']);
     await Promise.all(
       exam.examQuestion.map(async (examToQuestion) => {
         await this.examQuestionsRepository.delete(examToQuestion.id);
@@ -141,5 +135,16 @@ export class ExamsService {
     }
     const questions = exam.examQuestion.map((examQuestion) => examQuestion.question);
     return questions;
+  }
+
+  private async findExamExist(id: UUID, relations?: string[]): Promise<Exam> {
+    const examData = await this.examsRepository.findOne({
+      where: { id },
+      relations: relations
+    });
+    if (!examData) {
+      throw new BadRequestException(ERRORS_DICTIONARY.EXAM_NOT_FOUND);
+    }
+    return examData;
   }
 }

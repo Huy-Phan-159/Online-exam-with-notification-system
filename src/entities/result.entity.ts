@@ -14,14 +14,15 @@ export class Result extends BaseEntity {
   public score: number;
 
   @Column({
-    type: 'date',
+    type: 'timestamp',
     nullable: false
   })
   public timeStart: Date;
 
   @Column({
     type: 'interval',
-    nullable: false
+    nullable: false,
+    default: 0
   })
   public timeTaken: string;
 

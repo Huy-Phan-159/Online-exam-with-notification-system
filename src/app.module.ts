@@ -16,6 +16,7 @@ import { SharedModule } from './shared/shared.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { StudentsModule } from './modules/students/students.module';
 import { OptionsModule } from './modules/options/options.module';
+import { ResultsModule } from './modules/results/results.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -38,7 +39,8 @@ import { OptionsModule } from './modules/options/options.module';
     StudentsModule,
     CategoriesModule,
     ClassesModule,
-    OptionsModule
+    OptionsModule,
+    ResultsModule
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },

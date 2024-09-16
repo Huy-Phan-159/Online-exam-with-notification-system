@@ -29,5 +29,8 @@ export enum ERRORS_DICTIONARY {
 
   //
   NOT_RIGHTS = 'Not rights',
-  RESET_PASSWORD_FAIL = 'Reset password fail'
+  RESET_PASSWORD_FAIL = 'Reset password fail',
+
+  // RESULTS
+  RESULT_NOT_FOUND = 'result not found'
 }

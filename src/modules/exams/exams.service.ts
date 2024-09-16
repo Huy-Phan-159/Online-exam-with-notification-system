@@ -77,7 +77,8 @@ export class ExamsService {
     page: number,
     limit: number,
     search?: string
-  ): Promise<{ data: Exam[]; totalPages: number; currentPage: number }> {
+  ): Promise<{ data: Exam[]; totalPages: number; currentPage: number } | Exam[]> {
+    if (!page && !limit) return await this.examsRepository.find();
     const whereClause = search ? [{ name: ILike(`%${search}%`) }, { description: ILike(`%${search}%`) }] : {};
 
     const [data, totalItems] = await this.examsRepository.findAndCount({

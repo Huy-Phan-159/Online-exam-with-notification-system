@@ -84,5 +84,4 @@ export class UsersService {
       await this.usersRepository.createUser(newUser);
     }
   }
-
 }

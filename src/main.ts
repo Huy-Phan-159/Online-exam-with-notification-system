@@ -48,4 +48,4 @@ bootstrap().catch((error) => {
   logger.error('Failed to bootstrap the application', error); // Log any errors that occur during bootstrap
 });
 
-initData(); 
+initData();

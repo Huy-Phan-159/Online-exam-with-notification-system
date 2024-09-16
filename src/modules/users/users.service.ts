@@ -69,7 +69,8 @@ export class UsersService {
     const password = '123';
 
     if (!existingUser) {
-      const newUser = this.configService.adminInfo
+      const newUser = this.configService.adminInfo;
+      
       newUser.password = await bcrypt.hash(newUser.password, 10);
 
       await this.usersRepository.createUser(newUser);

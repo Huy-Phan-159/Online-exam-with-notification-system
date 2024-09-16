@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+  Request,
+  UseGuards,
+  ParseUUIDPipe
+} from '@nestjs/common';
 import { OptionsService } from './options.service';
 import { CreateOptionDto } from './dto/create-option.dto';
 import { UpdateOptionDto } from './dto/update-option.dto';
@@ -25,9 +37,16 @@ export class OptionsController {
     const option = await this.optionsService.create(user, dto);
     return option;
   }
+
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOptionDto: UpdateOptionDto) {
-    return this.optionsService.update(+id, updateOptionDto);
+  @Roles(Role.TEACHER)
+  async update(
+    @Param('id', new ParseUUIDPipe()) id: UUID,
+    @User() user,
+    @Body() updateOptionDto: UpdateOptionDto
+  ) {
+    return await this.optionsService.update(id, user, updateOptionDto);
   }
 
   @UseGuards(JwtAuthGuard)

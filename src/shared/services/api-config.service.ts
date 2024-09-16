@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { join } from 'path';
+import { Gender } from 'src/entities/enums/gender.enum';
+import { Role } from 'src/entities/enums/role.enum';
 
 @Injectable()
 export class ApiConfigService {
@@ -82,6 +84,20 @@ export class ApiConfigService {
       migrationsTableName: 'migrations',
       // ssl: this.getBoolean('DB_SSL'),
       logging: this.getBoolean('ENABLE_ORM_LOGS')
+    };
+  }
+
+  get adminInfo() {
+    return {
+      role: Role.ADMIN,
+      email: 'admin@gmail.com',
+      password: 'admin',
+      gender: Gender.MALE,
+      birthDate: new Date('1990-01-01'),
+      phoneNumber: '123',
+      isActive: true,
+      firstName: 'John',
+      lastName: 'Doe'
     };
   }
 

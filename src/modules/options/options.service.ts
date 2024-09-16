@@ -9,6 +9,7 @@ import { QuestionsService } from '../questions/questions.service';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
 import { QuestionType } from 'src/entities/enums/question-type.enum';
 import { UsersService } from '../users/users.service';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class OptionsService {
@@ -85,8 +86,35 @@ export class OptionsService {
     return foundOption;
   }
 
-  update(id: number, updateOptionDto: UpdateOptionDto) {
-    return `This ation updates a #${id} option`;
+  async update(id: UUID, user: User, updateOptionDto: UpdateOptionDto) {
+    const teacherId = user.teacher.id;
+
+    const updateOption = await this.optionRepository.findOne({
+      where: {
+        id,
+        question: {
+          teacher: {
+            id: teacherId
+          }
+        }
+      }
+    });
+
+    if (!updateOption) {
+      throw new BadRequestException({
+        message: ERRORS_DICTIONARY.OPTION_NOT_FOUND
+      });
+    }
+
+    await this.optionRepository.update(updateOption.id, updateOptionDto).then((updateResult) => {
+      if (!updateResult.affected) {
+        throw new BadRequestException({
+          message: ERRORS_DICTIONARY.NOT_RECORD_WAS_UPDATED
+        });
+      }
+
+      return true;
+    });
   }
 
   async remove(optionId: UUID) {

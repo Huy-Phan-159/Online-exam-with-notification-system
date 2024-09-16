@@ -6,6 +6,7 @@ import { configSwagger } from './configs/setup-swagger';
 import { ERRORS_DICTIONARY } from './constraints/error-dictionary.constraint';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
+import { UsersService } from './modules/users/users.service';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -34,7 +35,17 @@ async function bootstrap() {
   logger.log(`🚀 Server running on: http://localhost:${port}/api-docs`);
 }
 
+async function initData() {
+  const app = await NestFactory.createApplicationContext(AppModule);
+  const userService = app.get(UsersService);
+  await userService.createInitialUser();
+
+  await app.close();
+}
+
 bootstrap().catch((error) => {
   const logger = new Logger('Bootstrap');
   logger.error('Failed to bootstrap the application', error); // Log any errors that occur during bootstrap
 });
+
+initData(); 

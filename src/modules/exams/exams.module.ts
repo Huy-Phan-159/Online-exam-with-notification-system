@@ -12,6 +12,7 @@ import { ExamClass } from 'src/entities/exam-class.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Exam, ExamQuestion, ExamClass]), UsersModule, QuestionsModule],
   controllers: [ExamsController],
-  providers: [ExamsService, JwtService]
+  providers: [ExamsService, JwtService],
+  exports: [ExamsService]
 })
 export class ExamsModule {}

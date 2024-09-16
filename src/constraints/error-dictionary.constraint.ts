@@ -28,5 +28,8 @@ export enum ERRORS_DICTIONARY {
   OPTION_NOT_FOUND = 'Option not found',
 
   //
-  NOT_RIGHTS = 'Not rights'
+  NOT_RIGHTS = 'Not rights',
+
+  // RESULTS
+  RESULT_NOT_FOUND = 'result not found'
 }

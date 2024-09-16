@@ -31,17 +31,22 @@ export class ClassesService {
       return acc;
     }, {});
 
-    return await this.classesRepository.findAll(page, limit, whereConditions).then(([records, total]) => {
-      const totalPages = Math.ceil(total / limit);
+    return await this.classesRepository
+      .findAll(page, limit, whereConditions)
+      .then(([records, total]) => {
+        const totalPages = Math.ceil(total / limit);
 
-      return {
-        records,
-        total,
-        page,
-        limit,
-        totalPages
-      };
-    });
+        return {
+          records,
+          total,
+          page,
+          limit,
+          totalPages
+        };
+      })
+      .catch((error) => {
+        throw new BadRequestException(new ResponseException(error.message));
+      });
   }
 
   async findOne(id: UUID, searchQueries: Record<string, any> = {}) {

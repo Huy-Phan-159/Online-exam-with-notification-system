@@ -21,7 +21,6 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { QueryCategoryDto } from './dto/query-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
-@Roles(Role.ADMIN)
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth('JWT-auth')
 @ApiTags('categories')

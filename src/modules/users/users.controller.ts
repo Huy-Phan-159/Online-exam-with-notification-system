@@ -20,7 +20,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserPaginationDto } from './dto/user-pagination.dto';
 import { UsersService } from './users.service';
 
-@Roles(Role.ADMIN)
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth('JWT-auth')
 @Controller('users')

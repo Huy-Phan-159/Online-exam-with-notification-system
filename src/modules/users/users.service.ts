@@ -8,6 +8,7 @@ import { User } from '../../entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserPaginationDto } from './dto/user-pagination.dto';
 import { UsersRepository } from './users.repository';
+import { PaginationResult } from 'src/shared/interfaces/pagination-result.interface';
 
 @Injectable()
 export class UsersService {
@@ -16,8 +17,15 @@ export class UsersService {
     private readonly configService: ApiConfigService
   ) {}
 
-  async findAll(userPagination: UserPaginationDto) {
-    return await this.usersRepository.findAllUser(userPagination);
+  async findAll(userPagination: UserPaginationDto): Promise<PaginationResult<User>> {
+    const { items, count } = await this.usersRepository.findAllUser(userPagination);
+    return {
+      records: items,
+      totalPages: Math.ceil(count / userPagination.take),
+      total: count,
+      limit: userPagination.take,
+      page: userPagination.page
+    };
   }
 
   async findOne(userId: UUID): Promise<User> {
@@ -58,7 +66,7 @@ export class UsersService {
 
     if (!existingUser) {
       const newUser = this.configService.adminInfo;
-      
+
       newUser.password = await bcrypt.hash(newUser.password, 10);
 
       await this.usersRepository.createUser(newUser);

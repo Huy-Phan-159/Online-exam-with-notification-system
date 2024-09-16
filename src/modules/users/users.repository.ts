@@ -81,7 +81,7 @@ export class UsersRepository {
 
     const skip = (page - 1) * take;
 
-    return await this.usersRepository.findAndCount({
+    const [items, count] = await this.usersRepository.findAndCount({
       where: {
         role: Role.TEACHER,
         firstName: firstName ? ILike(`%${firstName}%`) : Like(`%%`),
@@ -93,6 +93,7 @@ export class UsersRepository {
       take: takeData,
       skip
     });
+    return { items, count };
   }
 
   async findOneStudent(userId: UUID): Promise<User> {
@@ -113,7 +114,7 @@ export class UsersRepository {
 
     const skip = (page - 1) * take;
 
-    return await this.usersRepository.findAndCount({
+    const [items, count] = await this.usersRepository.findAndCount({
       where: {
         role: Role.STUDENT,
         firstName: firstName ? ILike(`%${firstName}%`) : Like(`%%`),
@@ -125,6 +126,11 @@ export class UsersRepository {
       take: takeData,
       skip
     });
+
+    return {
+      items,
+      count
+    };
   }
 
   async update(userId: UUID, updateUserDto: UpdateUserDto): Promise<UpdateResult> {

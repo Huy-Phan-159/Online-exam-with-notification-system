@@ -23,7 +23,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/guards/roles.guard';
 
-@Roles(Role.ADMIN, Role.TEACHER)
+@Roles( Role.TEACHER)
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth('JWT-auth')
 @ApiTags('Students')

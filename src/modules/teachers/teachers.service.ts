@@ -6,10 +6,10 @@ import { UserExistsException } from 'src/exceptions/users/userExisted.exception'
 import { UserNotFoundException } from 'src/exceptions/users/userNotFound.excetion';
 import { UpdateResult } from 'typeorm';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { UserPaginationDto } from '../users/dto/user-pagination.dto';
 import { UsersRepository } from '../users/users.repository';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
 import { TeachersRepository } from './teachers.repository';
-import { UserPaginationDto } from '../users/dto/user-pagination.dto';
 
 @Injectable()
 export class TeachersService {
@@ -38,13 +38,15 @@ export class TeachersService {
   }
 
   async findAll(userPagination: UserPaginationDto) {
-    const teacher = await this.usersRepository.findAllTeacher(userPagination);
+    const { items, count } = await this.usersRepository.findAllTeacher(userPagination);
 
-    if (!teacher) {
-      throw new UserNotFoundException();
-    }
-
-    return teacher;
+    return {
+      records: items,
+      totalPages: Math.ceil(count / userPagination.take),
+      total: count,
+      limit: userPagination.take,
+      page: userPagination.page
+    };
   }
 
   async findOne(userId: UUID): Promise<User> {

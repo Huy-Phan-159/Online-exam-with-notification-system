@@ -39,7 +39,14 @@ export class StudentsService {
   }
 
   async findAll(userPagination: UserPaginationDto) {
-    return await this.usersRepository.findAllStudent(userPagination);
+    const { items, count } = await this.usersRepository.findAllStudent(userPagination);
+    return {
+      records: items,
+      totalPages: Math.ceil(count / userPagination.take),
+      total: count,
+      limit: userPagination.take,
+      page: userPagination.page
+    };
   }
 
   async findOne(userId: UUID) {

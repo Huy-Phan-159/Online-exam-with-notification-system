@@ -27,6 +27,11 @@ export class Question extends BaseEntity {
   })
   public categoryId: string;
 
+  @Column({
+    type: 'uuid'
+  })
+  public teacherId: string;
+
   @ManyToOne(() => Teacher, (teacher) => teacher.questions)
   public teacher: Teacher;
 

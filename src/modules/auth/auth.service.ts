@@ -42,7 +42,7 @@ export class AuthService {
       userId: foundUser.id
     };
     const token = this.jwtService.sign(payload);
-    const resetLink = `http://localhost:4000/reset-password?token=${token}`;
+    const resetLink = `${process.env.LINK_APP}?token=${token}`;
     const newTemplate = new ResetPasswordTemplate(resetLink);
     const dto: MailDTO = {
       from: 'Auth-backend service',
@@ -50,7 +50,6 @@ export class AuthService {
       subject: 'Password reset',
       html: newTemplate.getTemplate()
     };
-    console.log(dto);
     await this.mailService.sendMail(dto);
   }
 

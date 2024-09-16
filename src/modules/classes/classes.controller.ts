@@ -10,7 +10,6 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/entities/enums/role.enum';
 import { RolesGuard } from 'src/guards/roles.guard';
 
-
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth('JWT-auth')
 @Controller('classes')

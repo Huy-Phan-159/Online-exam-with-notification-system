@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config'; // Import the ConfigModule from the correct module
+import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GlobalException } from './exceptions/global.exception';
@@ -17,6 +17,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { StudentsModule } from './modules/students/students.module';
 import { OptionsModule } from './modules/options/options.module';
 import { ResultsModule } from './modules/results/results.module';
+import { FilesModule } from './modules/files/files.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,7 +41,8 @@ import { ResultsModule } from './modules/results/results.module';
     CategoriesModule,
     ClassesModule,
     OptionsModule,
-    ResultsModule
+    ResultsModule,
+    FilesModule
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },

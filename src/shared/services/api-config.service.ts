@@ -90,8 +90,8 @@ export class ApiConfigService {
   get adminInfo() {
     return {
       role: Role.ADMIN,
-      email: 'admin@gmail.com',
-      password: 'admin',
+      email: this.configService.get<string>('ADMIN_EMAIL'),
+      password: this.configService.get<string>('ADMIN_PASSWORD'),
       gender: Gender.MALE,
       birthDate: new Date('1990-01-01'),
       phoneNumber: '123',

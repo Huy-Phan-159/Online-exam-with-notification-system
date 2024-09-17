@@ -9,6 +9,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserPaginationDto } from './dto/user-pagination.dto';
 import { UsersRepository } from './users.repository';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
+import { PaginationResult } from 'src/shared/interfaces/pagination-result.interface';
 
 @Injectable()
 export class UsersService {
@@ -17,8 +18,15 @@ export class UsersService {
     private readonly configService: ApiConfigService
   ) {}
 
-  async findAll(userPagination: UserPaginationDto) {
-    return await this.usersRepository.findAllUser(userPagination);
+  async findAll(userPagination: UserPaginationDto): Promise<PaginationResult<User>> {
+    const { items, count } = await this.usersRepository.findAllUser(userPagination);
+    return {
+      records: items,
+      totalPages: Math.ceil(count / userPagination.take),
+      total: count,
+      limit: userPagination.take,
+      page: userPagination.page
+    };
   }
 
   async findOne(userId: UUID): Promise<User> {
@@ -61,7 +69,7 @@ export class UsersService {
     }
     return raw;
   }
-  
+
   async createInitialUser() {
     // Check if the user exists
     const existingUser = await this.usersRepository.findUserByEmail('admin@gmail.com');
@@ -69,11 +77,11 @@ export class UsersService {
     const password = '123';
 
     if (!existingUser) {
-      const newUser = this.configService.adminInfo
+      const newUser = this.configService.adminInfo;
+
       newUser.password = await bcrypt.hash(newUser.password, 10);
 
       await this.usersRepository.createUser(newUser);
     }
   }
-  
 }

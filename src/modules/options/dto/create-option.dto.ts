@@ -20,7 +20,7 @@ export class CreateOptionDto {
   isCorrect: boolean;
 
   @ApiProperty({
-    description: 'uuid of question',
+    description: 'uuid of question'
   })
   @Expose()
   @IsString()

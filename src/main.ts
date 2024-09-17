@@ -4,9 +4,9 @@ import { ValidationError } from 'class-validator';
 import { AppModule } from './app.module';
 import { configSwagger } from './configs/setup-swagger';
 import { ERRORS_DICTIONARY } from './constraints/error-dictionary.constraint';
+import { UsersService } from './modules/users/users.service';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
-import { UsersService } from './modules/users/users.service';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -22,6 +22,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
+      forbidNonWhitelisted: true,
       exceptionFactory: (errors: ValidationError[]) =>
         new BadRequestException({
           message: ERRORS_DICTIONARY.VALIDATION_ERROR,
@@ -48,4 +49,4 @@ bootstrap().catch((error) => {
   logger.error('Failed to bootstrap the application', error); // Log any errors that occur during bootstrap
 });
 
-initData(); 
+initData();

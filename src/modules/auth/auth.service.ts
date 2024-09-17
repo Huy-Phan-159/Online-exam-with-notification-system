@@ -2,11 +2,11 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UserNotFoundException } from 'src/exceptions/users/userNotFound.excetion';
+import { MailDTO } from 'src/shared/interfaces/mail.dto';
+import { MailService } from 'src/shared/services/mail.service';
+import { ResetPasswordTemplate } from 'src/shared/template/reset-password.template';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
-import { MailService } from 'src/shared/services/mail.service';
-import { MailDTO } from 'src/shared/interfaces/mail.dto';
-import { ResetPasswordTemplate } from 'src/shared/template/reset-password.template';
 
 @Injectable()
 export class AuthService {

@@ -8,7 +8,7 @@ export class LoginDto {
   @IsEmail()
   @ApiProperty({
     description: 'email of user',
-    example: 'abc@gmail.com'
+    example: 'admin@gmail.com'
   })
   email: string;
 
@@ -16,7 +16,7 @@ export class LoginDto {
   @MaxLength(255)
   @ApiProperty({
     description: 'password of user',
-    example: '123@Abc'
+    example: 'admin'
   })
   password: string;
 }

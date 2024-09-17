@@ -54,14 +54,29 @@ export class QuestionsService {
     if (foundUser.role === 'teacher') {
       // const { teacher } = await this.userService.findOne(user);
       const teacher = foundUser.teacher;
-      return query
-        .innerJoinAndSelect('question.teacher', 'teacher')
-        .select(['question.type', 'question.content'])
-        .where('teacher.id = :teacherId', { teacherId: teacher.id })
-        .getMany();
+      // return query
+      //   .innerJoinAndSelect('question.teacher', 'teacher', 'option')
+      //   .select(['question.type', 'question.content'])
+      //   .where('teacher.id = :teacherId', { teacherId: teacher.id })
+      //   .getMany();
+      return this.questionRepository.find({
+        where: {
+          teacher: { id: teacher.id }
+        },
+        relations: {
+          options: true
+        }
+      })
     }
     if (user.role === 'admin') {
-      return await query.getMany();
+      return this.questionRepository.find({
+        where: {
+        },
+        relations: {
+          options: true
+        },
+        withDeleted: true
+      });
     }
     throw new BadRequestException({
       message: ERRORS_DICTIONARY.NOT_RIGHTS

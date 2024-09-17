@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, ILike, Repository, UpdateResult } from 'typeorm';
 import { ERRORS_DICTIONARY } from 'src/constraints/error-dictionary.constraint';
 import { UUID } from 'crypto';
-import { Result } from 'src/entities/Result.entity';
+import { Result } from 'src/entities/result.entity';
 import { CreateResultDto } from './dto/create-result.dto';
 import { Option } from 'src/entities/option.entity';
 import { ExamsService } from '../exams/exams.service';
